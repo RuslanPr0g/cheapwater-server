@@ -63,7 +63,7 @@ namespace WEBApi
 
       app.UseEndpoints(endpoints =>
       {
-
+          endpoints.MapControllers();
       });
     }
   }
