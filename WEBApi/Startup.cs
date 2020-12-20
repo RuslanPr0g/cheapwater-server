@@ -33,7 +33,8 @@ namespace WEBApi
       });
 
       services.AddCors();
-
+        
+      services.AddDapperDatabase();
     }
 
     public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
@@ -48,11 +49,6 @@ namespace WEBApi
       app.UseHttpsRedirection();
 
       app.UseRouting();
-
-      app.UseCors(builder => builder
-         .AllowAnyOrigin()
-         .AllowAnyMethod()
-         .AllowAnyHeader());
 
       app.UseCors(builder => builder
          .AllowAnyOrigin()
