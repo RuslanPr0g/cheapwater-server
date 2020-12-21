@@ -1,9 +1,11 @@
-﻿using DataAccessLibrary.DB.Models;
+﻿using DataAccessLibrary.DB.DapperSQL;
+using DataAccessLibrary.DB.Models;
 using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using WEBApi.Authentication;
 
 namespace WEBApi.Controllers
 {
@@ -11,13 +13,27 @@ namespace WEBApi.Controllers
     [Route("api/auth")]
     public class AutherizationController: ControllerBase
     {
+        private readonly IJWTokenManager _manager;
+        private readonly IUserRepository _repo;
+
+        public AutherizationController(IJWTokenManager manager, IUserRepository repo)
+        {
+            this._manager = manager;
+            this._repo = repo;
+        }
         [HttpPost("register")]
-        public ActionResult RegisterUser([FromBody]UserModel user)
+        public async Task<ActionResult> RegisterUser([FromBody]UserModel user)
         {
             if (user is not null)
             {
-                //do stuff
-                return Ok();
+                //add user to db
+
+                var token = await _manager.Authorize(user.Email, user.Password);
+                if (token is not null)
+                {
+                    return Ok(token);
+                }
+                return Unauthorized();
             }
             else
             {
@@ -25,12 +41,16 @@ namespace WEBApi.Controllers
             }
         }
         [HttpPost("login")]
-        public ActionResult LoginUser([FromBody] UserModelBase user)
+        public async Task<ActionResult> LoginUser([FromBody] UserModelBase user)
         {
             if (user is not null)
             {
-                //do stuff
-                return Ok();
+                var token = await _manager.Authorize(user.Email, user.Password);
+                if (token is not null)
+                {
+                    return Ok(token);
+                }
+                return Unauthorized();
             }
             else
             {
