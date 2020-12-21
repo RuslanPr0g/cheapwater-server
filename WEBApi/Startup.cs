@@ -33,7 +33,8 @@ namespace WEBApi
       });
 
       services.AddCors();
-
+        
+      services.AddDapperDatabase();
     }
 
     public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
@@ -54,12 +55,13 @@ namespace WEBApi
          .AllowAnyMethod()
          .AllowAnyHeader());
 
-      app.UseCors(builder => builder
-         .AllowAnyOrigin()
-         .AllowAnyMethod()
-         .AllowAnyHeader());
-
       app.UseAuthorization();
 
       app.UseEndpoints(endpoints =>
       {
+          endpoints.MapControllers();
+      });
+    }
+  }
+}
+    
