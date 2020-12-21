@@ -4,7 +4,7 @@ using Microsoft.Extensions.Configuration;
 using DataAccessLibrary;
 using DataAccessLibrary.DB.DapperSQL;
 
-namespace WEBApi
+namespace WEBApi.Extensions
 {
 	public static class DapperDatabaseExtensions
 	{
