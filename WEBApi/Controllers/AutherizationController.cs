@@ -8,10 +8,10 @@ using System.Threading.Tasks;
 namespace WEBApi.Controllers
 {
     [ApiController]
-    public class authController: ControllerBase
+    [Route("api/auth")]
+    public class AutherizationController: ControllerBase
     {
-        [Route("api/auth/register")]
-        [HttpPost]
+        [HttpPost("register")]
         public ActionResult RegisterUser([FromBody]UserModel user)
         {
             if (user is not null)
@@ -24,8 +24,7 @@ namespace WEBApi.Controllers
                 return BadRequest();
             }
         }
-        [Route("api/auth/login")]
-        [HttpPost]
+        [HttpPost("login")]
         public ActionResult LoginUser([FromBody] UserModelBase user)
         {
             if (user is not null)
