@@ -1,5 +1,6 @@
-﻿using DataAccessLibrary.DB.DapperSQL;
+﻿using DataAccessLibrary.DB;
 using DataAccessLibrary.DB.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
@@ -57,5 +58,13 @@ namespace WEBApi.Controllers
                 return BadRequest();
             }
         }
+        //Authorization check
+        /*
+        [Authorize]
+        [HttpGet]
+        public ActionResult<string> GetUSCapital()
+        {
+            return Ok("Washington DC");
+        }*/
     }
 }

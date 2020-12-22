@@ -1,4 +1,4 @@
-﻿using DataAccessLibrary.DB.DapperSQL;
+﻿using DataAccessLibrary.DB;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.IdentityModel.Tokens;
