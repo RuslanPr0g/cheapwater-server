@@ -5,13 +5,13 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace DataAccessLibrary.DB.DapperSQL
+namespace DataAccessLibrary.DB
 {
-    public class UserRepository : IUserRepository
+    public class UserRepo : IUserRepository
     {
         private readonly ISQLDataAccess _db;
 
-        public UserRepository(ISQLDataAccess db)
+        public UserRepo(ISQLDataAccess db)
         {
             this._db = db;
         }

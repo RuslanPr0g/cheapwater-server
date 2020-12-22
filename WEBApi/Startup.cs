@@ -53,8 +53,6 @@ namespace WEBApi
                 app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "WEBApi v1"));
             }
 
-            app.UseWebSockets();
-
             app.UseWebSocketsServer();
 
             app.UseHttpsRedirection();

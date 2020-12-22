@@ -13,6 +13,7 @@ namespace WEBApi.Extensions
     {
         public static IApplicationBuilder UseWebSocketsServer(this IApplicationBuilder app)
         {
+            app.UseWebSockets();
             app.UseMiddleware<WebSocketsMiddleware>();
             return app;
         }
