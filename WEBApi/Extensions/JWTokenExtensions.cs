@@ -15,13 +15,16 @@ namespace WEBApi.Extensions
     {
         public static IServiceCollection AddJWTokens(this IServiceCollection services)
         {
+            //move to appsetings/azure keyvault
             string key = "This is the key, a very secret one";
+
             services.AddAuthentication(x =>
             {
                 x.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
                 x.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
             })
-            .AddJwtBearer(x => {
+            .AddJwtBearer(x =>
+            {
                 x.RequireHttpsMetadata = false;
                 x.SaveToken = true;
                 x.TokenValidationParameters = new TokenValidationParameters
@@ -33,8 +36,10 @@ namespace WEBApi.Extensions
                 };
             });
 
-            JWTokenManager manager = new JWTokenManager(key, new MockUserRepo());
-            services.AddSingleton<IJWTokenManager>((x) => manager);
+            services.AddSingleton<IJWTokenManager>(x =>
+                    new JWTokenManager(key, x.GetService<IUserRepository>())
+            );
+
             return services;
         }
     }

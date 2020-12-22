@@ -33,7 +33,7 @@ namespace WEBApi.Authentication
                 {
                     Subject = new ClaimsIdentity(new Claim[]
                     {
-                        new Claim(ClaimTypes.Email, email)
+                        new Claim(ClaimTypes.NameIdentifier, user.UserID)
                     }),
                     Expires = DateTime.Now.AddDays(1),
                     SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(TokenKey), SecurityAlgorithms.HmacSha256Signature)
