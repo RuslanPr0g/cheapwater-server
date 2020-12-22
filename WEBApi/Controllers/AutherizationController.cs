@@ -1,10 +1,6 @@
 ﻿using DataAccessLibrary.DB;
 using DataAccessLibrary.DB.Models;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 using WEBApi.Authentication;
 
@@ -22,6 +18,7 @@ namespace WEBApi.Controllers
             this._manager = manager;
             this._repo = repo;
         }
+
         [HttpPost("register")]
         public async Task<ActionResult> RegisterUser([FromBody]UserModel user)
         {
