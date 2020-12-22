@@ -14,7 +14,9 @@ using Microsoft.Extensions.Logging;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using WEBApi.Authentication;
+using WEBApi.Data;
 using WEBApi.Extensions;
+using Microsoft.EntityFrameworkCore;
 
 namespace WEBApi
 {
@@ -29,19 +31,20 @@ namespace WEBApi
 
         public void ConfigureServices(IServiceCollection services)
         {
-
             services.AddControllers();
             services.AddSwaggerGen(c =>
             {
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "WEBApi", Version = "v1" });
             });
 
+            services.AddDbContext<AuthContext>(x =>
+                x.UseSqlServer(Configuration.GetConnectionString("Standard")));
+
             services.AddDapperDatabase();
 
             services.AddJWTokens();
 
             services.AddCors();
-
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
