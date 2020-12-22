@@ -36,11 +36,12 @@ namespace WEBApi
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "WEBApi", Version = "v1" });
             });
 
+            services.AddDapperDatabase();
+
             services.AddJWTokens();
 
             services.AddCors();
 
-            services.AddDapperDatabase();
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
