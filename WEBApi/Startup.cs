@@ -2,7 +2,6 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 using System.Threading.Tasks;
-using DataAccessLibrary.DB.DapperSQL;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -16,6 +15,8 @@ using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using WEBApi.Authentication;
 using WEBApi.Extensions;
+using Microsoft.EntityFrameworkCore;
+using DataAccessLibrary.DB;
 
 namespace WEBApi
 {
@@ -30,18 +31,22 @@ namespace WEBApi
 
         public void ConfigureServices(IServiceCollection services)
         {
-
             services.AddControllers();
             services.AddSwaggerGen(c =>
             {
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "WEBApi", Version = "v1" });
             });
 
+            services.AddDbContext<AuthContext>(x =>
+                    x.UseSqlServer(Configuration.GetConnectionString("Standard"),
+                    options => options.MigrationsAssembly(nameof(WEBApi)))
+            );
+
+            services.AddDapperDatabase();
+
             services.AddJWTokens();
 
             services.AddCors();
-
-            services.AddDapperDatabase();
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
@@ -52,6 +57,8 @@ namespace WEBApi
                 app.UseSwagger();
                 app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "WEBApi v1"));
             }
+
+            app.UseWebSocketsServer();
 
             app.UseHttpsRedirection();
 

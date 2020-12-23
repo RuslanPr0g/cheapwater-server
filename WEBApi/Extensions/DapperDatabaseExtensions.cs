@@ -2,7 +2,7 @@
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Configuration;
 using DataAccessLibrary;
-using DataAccessLibrary.DB.DapperSQL;
+using DataAccessLibrary.DB;
 
 namespace WEBApi.Extensions
 {
@@ -11,7 +11,7 @@ namespace WEBApi.Extensions
 		public static IServiceCollection AddDapperDatabase(this IServiceCollection services)
         {
 			services.AddScoped<ISQLDataAccess, SQLDataAccess>();
-			services.AddScoped<IUserRepository, UserRepository>();
+			services.AddScoped<IUserRepository, UserRepo>();
 			return services;
         }
 	}
