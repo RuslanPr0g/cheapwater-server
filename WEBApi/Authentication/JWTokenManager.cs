@@ -1,4 +1,5 @@
 ﻿using DataAccessLibrary.DB;
+using DataAccessLibrary.DB.Entities;
 using DataAccessLibrary.DB.Models;
 using Microsoft.IdentityModel.Tokens;
 using System;
@@ -23,7 +24,7 @@ namespace WEBApi.Authentication
         }
         public async Task<string> Authorize(string email, string password)
         {
-            UserModel user = await _repo.FindUserByEmailAsync(email);
+            User user = await _repo.FindUserByIdAsync(email);
 
             if((user is not null)&&(user.Password.Equals(password)))
             {
@@ -33,7 +34,7 @@ namespace WEBApi.Authentication
                 {
                     Subject = new ClaimsIdentity(new Claim[]
                     {
-                        new Claim(ClaimTypes.NameIdentifier, user.UserID)
+                        new Claim(ClaimTypes.NameIdentifier, user.Id)
                     }),
                     Expires = DateTime.Now.AddDays(1),
                     SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(TokenKey), SecurityAlgorithms.HmacSha256Signature)
