@@ -14,9 +14,9 @@ using Microsoft.Extensions.Logging;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using WEBApi.Authentication;
-using WEBApi.Data;
 using WEBApi.Extensions;
 using Microsoft.EntityFrameworkCore;
+using DataAccessLibrary.DB;
 
 namespace WEBApi
 {
@@ -38,7 +38,9 @@ namespace WEBApi
             });
 
             services.AddDbContext<AuthContext>(x =>
-                x.UseSqlServer(Configuration.GetConnectionString("Standard")));
+                    x.UseSqlServer(Configuration.GetConnectionString("Standard"),
+                    options => options.MigrationsAssembly(nameof(WEBApi)))
+            );
 
             services.AddDapperDatabase();
 
