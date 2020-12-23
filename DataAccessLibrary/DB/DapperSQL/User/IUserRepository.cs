@@ -9,6 +9,7 @@ namespace DataAccessLibrary.DB
 {
     public interface IUserRepository
     {
-        Task<UserModel> FindUserByEmailAsync(string email);
+        Task<UserModel> FindUserByIdAsync(string id);
+        Task InsertUserIntoTheDb(UserModel user);
     }
 }

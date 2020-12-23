@@ -9,9 +9,14 @@ namespace DataAccessLibrary.DB
 {
     public class MockUserRepo : IUserRepository
     {
-        public async Task<UserModel> FindUserByEmailAsync(string email)
+        public async Task<UserModel> FindUserByIdAsync(string email)
         {
             return new UserModel { Email = "Vasyka2@gmail.com", Nickname = "Vasyka", Password = "123" };
+        }
+
+        public Task InsertUserIntoTheDb(UserModel user)
+        {
+            throw new NotImplementedException();
         }
     }
 }

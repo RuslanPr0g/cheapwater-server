@@ -23,7 +23,7 @@ namespace WEBApi.Authentication
         }
         public async Task<string> Authorize(string email, string password)
         {
-            UserModel user = await _repo.FindUserByEmailAsync(email);
+            UserModel user = await _repo.FindUserByIdAsync(email);
 
             if((user is not null)&&(user.Password.Equals(password)))
             {
