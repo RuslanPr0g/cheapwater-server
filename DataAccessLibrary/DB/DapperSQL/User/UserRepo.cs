@@ -1,4 +1,5 @@
-﻿using DataAccessLibrary.DB.Models;
+﻿using DataAccessLibrary.DB.Entities;
+using DataAccessLibrary.DB.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -16,14 +17,14 @@ namespace DataAccessLibrary.DB
             this._db = db;
         }
 
-        public async Task<UserModel> FindUserByIdAsync(string id)
+        public async Task<User> FindUserByIdAsync(string id)
         {
             string sql = @"SELECT * FROM USERS WHERE Id = @Id";
             var p = new 
             {
                 Id = id
             };
-            List<UserModel> users = (await _db.LoadData<UserModel, dynamic>(sql, p));
+            List<User> users = (await _db.LoadData<User, dynamic>(sql, p));
             if(users.Count>1)
             {
                 throw new Exception("Duplicate primary key");

@@ -14,5 +14,6 @@ namespace DataAccessLibrary.DB.Entities
         [MaxLength(60)]
         [Required]
         public string Password { get; set; }
+        public string Nickname { get; set; }
     }
 }
