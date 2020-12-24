@@ -1,12 +1,12 @@
 using DataAccessLibrary.DB;
 using DataAccessLibrary.DB.Entities;
-using DataAccessLibrary.DB.Models;
 using Microsoft.AspNetCore.Mvc;
 using Moq;
 using System;
 using System.Threading.Tasks;
 using WEBApi.Authentication;
 using WEBApi.Controllers;
+using WEBApi.DTOs;
 using Xunit;
 
 namespace WebApi.Test
@@ -16,13 +16,17 @@ namespace WebApi.Test
         private readonly AutherizationController _sut;
         private readonly Mock<IJWTokenManager> _managerMock = new Mock<IJWTokenManager>();
         private readonly Mock<IUserRepository> _repoMock = new Mock<IUserRepository>();
+        private readonly IModelConverter _converter;
+
         public AutherizationControllerTests()
         {
-            _sut = new AutherizationController(_managerMock.Object, _repoMock.Object);
+            this._converter = new ModelConverter();
+            _sut = new AutherizationController(_managerMock.Object, _repoMock.Object, _converter);
+            
         }
         private void BasicMockSetup(UserModel user)
         {
-            _repoMock.Setup(x => x.InsertUserIntoTheDb(user)).Returns(Task.CompletedTask);
+            _repoMock.Setup(x => x.InsertUserIntoTheDb(_converter.ConvertUserFromDTO(user))).Returns(Task.CompletedTask);
             _managerMock.Setup(x => x.Authorize("", "")).ReturnsAsync("ValidAccessToken");
         }
         [Fact]

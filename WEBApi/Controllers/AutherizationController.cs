@@ -1,10 +1,11 @@
 ﻿using DataAccessLibrary.DB;
-using DataAccessLibrary.DB.Models;
+using DataAccessLibrary.DB.Entities;
 using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Net.Mail;
 using System.Threading.Tasks;
 using WEBApi.Authentication;
+using WEBApi.DTOs;
 
 namespace WEBApi.Controllers
 {
@@ -14,20 +15,23 @@ namespace WEBApi.Controllers
     {
         private readonly IJWTokenManager _manager;
         private readonly IUserRepository _repo;
+        private readonly IModelConverter _converter;
 
-        public AutherizationController(IJWTokenManager manager, IUserRepository repo)
+        public AutherizationController(IJWTokenManager manager, IUserRepository repo, IModelConverter converter)
         {
             this._manager = manager;
             this._repo = repo;
+            this._converter = converter;
         }
 
         [HttpPost("register")]
-        public async Task<ActionResult> RegisterUser([FromBody]UserModel user)
+        public async Task<ActionResult> RegisterUser([FromBody]UserModel userDto)
         {
-            if (user is not null)
+            if (userDto is not null)
             {
-                if(IsValidUser(user))
+                if(IsValidUser(userDto))
                 {
+                    User user = _converter.ConvertUserFromDTO(userDto);
                     await _repo.InsertUserIntoTheDb(user);
                     var token = await _manager.Authorize(user.Email, user.Password);
                     if (token is not null)

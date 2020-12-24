@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace DataAccessLibrary.DB.Models
+namespace WEBApi.DTOs
 {
     public class UserModelBase
     {

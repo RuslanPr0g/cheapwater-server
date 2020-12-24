@@ -1,5 +1,4 @@
 ﻿using DataAccessLibrary.DB.Entities;
-using DataAccessLibrary.DB.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -19,7 +18,7 @@ namespace DataAccessLibrary.DB
 
         public async Task<User> FindUserByIdAsync(string id)
         {
-            string sql = @"SELECT * FROM USERS WHERE Id = @Id";
+            string sql = @"SELECT * FROM Users WHERE Id = @Id";
             var p = new 
             {
                 Id = id
@@ -33,11 +32,11 @@ namespace DataAccessLibrary.DB
             return user;
         }
 
-        public async Task InsertUserIntoTheDb(UserModel user)
+        public async Task InsertUserIntoTheDb(User user)
         {
-            string sql = @"INSERT Users(Id, Email, Password, Nickname) 
-                Values(UserID, Email, Password, Nickname)";
-            await _db.SaveData<UserModel>(sql, user);
+            string sql = @"INSERT Users(Id, Email, Password, Username) 
+                Values(UserID, Email, Password, Username)";
+            await _db.SaveData<User>(sql, user);
         }
     }
 }
