@@ -14,5 +14,7 @@ namespace DataAccessLibrary.DB.Entities
         [MaxLength(60)]
         [Required]
         public string Password { get; set; }
+        [Required]
+        public int Balance { get; set; } = 0;
     }
 }
