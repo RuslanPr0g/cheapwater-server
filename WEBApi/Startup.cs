@@ -37,17 +37,23 @@ namespace WEBApi
             {
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "WEBApi", Version = "v1" });
             });
-
+            
             services.AddDbContext<AuthContext>(x =>
                     x.UseSqlServer(Configuration.GetConnectionString("Standard"),
                     options => options.MigrationsAssembly(nameof(WEBApi)))
             );
 
+            services.AddScoped<IUserAddRepository, UserAddRepository>();
+
             services.AddSingleton<IModelConverter, ModelConverter>();
 
             services.AddDapperDatabase();
 
-            services.AddJWTokens();
+            services.AddSingleton<IJwtokenManagerFactory, JwtokenManagerFactory>();
+
+
+
+            services.AddJWTokens(Configuration);
 
             services.AddCors();
         }
