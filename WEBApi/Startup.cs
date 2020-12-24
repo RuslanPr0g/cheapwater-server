@@ -17,6 +17,7 @@ using WEBApi.Authentication;
 using WEBApi.Extensions;
 using Microsoft.EntityFrameworkCore;
 using DataAccessLibrary.DB;
+using WEBApi.DTOs;
 
 namespace WEBApi
 {
@@ -41,6 +42,8 @@ namespace WEBApi
                     x.UseSqlServer(Configuration.GetConnectionString("Standard"),
                     options => options.MigrationsAssembly(nameof(WEBApi)))
             );
+
+            services.AddSingleton<IModelConverter, ModelConverter>();
 
             services.AddDapperDatabase();
 
