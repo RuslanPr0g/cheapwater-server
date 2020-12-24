@@ -7,11 +7,11 @@ using System.Threading.Tasks;
 
 namespace DataAccessLibrary.DB
 {
-    public class UserRepo : IUserRepository
+    public class UserReadRepo : IUserReadRepository
     {
         private readonly ISQLDataAccess _db;
 
-        public UserRepo(ISQLDataAccess db)
+        public UserReadRepo(ISQLDataAccess db)
         {
             this._db = db;
         }
@@ -32,11 +32,5 @@ namespace DataAccessLibrary.DB
             return user;
         }
 
-        public async Task InsertUserIntoTheDb(User user)
-        {
-            string sql = @"INSERT Users(Id, Email, Password, Username) 
-                Values(UserID, Email, Password, Username)";
-            await _db.SaveData<User>(sql, user);
-        }
     }
 }

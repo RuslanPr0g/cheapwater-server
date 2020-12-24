@@ -7,16 +7,12 @@ using System.Threading.Tasks;
 
 namespace DataAccessLibrary.DB
 {
-    public class MockUserRepo : IUserRepository
+    public class MockUserRepo : IUserReadRepository
     {
         public async Task<User> FindUserByIdAsync(string email)
         {
             return new User { Email = "Vasyka2@gmail.com", Password = "123" };
         }
 
-        public Task InsertUserIntoTheDb(User user)
-        {
-            throw new NotImplementedException();
-        }
     }
 }

@@ -7,9 +7,8 @@ using System.Threading.Tasks;
 
 namespace DataAccessLibrary.DB
 {
-    public interface IUserRepository
+    public interface IUserAddRepository
     {
-        Task<User> FindUserByIdAsync(string id);
         Task InsertUserIntoTheDb(User user);
     }
 }
