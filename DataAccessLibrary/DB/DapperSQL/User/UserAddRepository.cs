@@ -6,7 +6,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace DataAccessLibrary.DB.DapperSQL
+namespace DataAccessLibrary.DB
 {
     public class UserAddRepository:IUserAddRepository
     {
@@ -19,7 +19,7 @@ namespace DataAccessLibrary.DB.DapperSQL
 
         public async Task InsertUserIntoTheDb(User user)
         {
-            _context.Add(user);
+            _context.Users.Add(user);
             _context.SaveChanges();
         }
     }

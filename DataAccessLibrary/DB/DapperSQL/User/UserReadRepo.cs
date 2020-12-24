@@ -16,6 +16,22 @@ namespace DataAccessLibrary.DB
             this._db = db;
         }
 
+        public async Task<User> FindUserByEmailAsync(string email)
+        {
+            string sql = @"SELECT * FROM Users WHERE Email = @Email";
+            var p = new
+            {
+                Email = email
+            };
+            List<User> users = (await _db.LoadData<User, dynamic>(sql, p));
+            if (users.Count > 1)
+            {
+                throw new Exception("Duplicate email");
+            }
+            var user = users.FirstOrDefault();
+            return user;
+        }
+
         public async Task<User> FindUserByIdAsync(string id)
         {
             string sql = @"SELECT * FROM Users WHERE Id = @Id";

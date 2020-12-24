@@ -10,5 +10,6 @@ namespace DataAccessLibrary.DB
     public interface IUserReadRepository
     {
         Task<User> FindUserByIdAsync(string id);
+        Task<User> FindUserByEmailAsync(string email);
     }
 }
