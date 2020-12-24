@@ -15,7 +15,7 @@ namespace WebApi.Test
     {
         private readonly AutherizationController _sut;
         private readonly Mock<IJWTokenManager> _managerMock = new Mock<IJWTokenManager>();
-        private readonly Mock<IUserRepository> _repoMock = new Mock<IUserRepository>();
+        private readonly Mock<IUserReadRepository> _repoMock = new Mock<IUserReadRepository>();
         private readonly IModelConverter _converter;
 
         public AutherizationControllerTests()

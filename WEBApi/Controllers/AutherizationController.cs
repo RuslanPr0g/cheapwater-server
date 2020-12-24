@@ -14,13 +14,14 @@ namespace WEBApi.Controllers
     public class AutherizationController: ControllerBase
     {
         private readonly IJWTokenManager _manager;
-        private readonly IUserRepository _repo;
+        private readonly IUserAddRepository _writerepo;
         private readonly IModelConverter _converter;
 
-        public AutherizationController(IJWTokenManager manager, IUserRepository repo, IModelConverter converter)
+        public AutherizationController(IJWTokenManager manager,
+            IUserAddRepository writerepo, IModelConverter converter)
         {
             this._manager = manager;
-            this._repo = repo;
+            this._writerepo = writerepo;
             this._converter = converter;
         }
 
@@ -32,7 +33,7 @@ namespace WEBApi.Controllers
                 if(IsValidUser(userDto))
                 {
                     User user = _converter.ConvertUserFromDTO(userDto);
-                    await _repo.InsertUserIntoTheDb(user);
+                    await _writerepo.InsertUserIntoTheDb(user);
                     var token = await _manager.Authorize(user.Email, user.Password);
                     if (token is not null)
                     {
