@@ -1,6 +1,5 @@
 ﻿using DataAccessLibrary.DB;
 using DataAccessLibrary.DB.Entities;
-using DataAccessLibrary.DB.Models;
 using Microsoft.IdentityModel.Tokens;
 using System;
 using System.Collections.Generic;
@@ -15,16 +14,16 @@ namespace WEBApi.Authentication
     public class JWTokenManager : IJWTokenManager
     {
         private readonly string key;
-        private readonly IUserRepository _repo;
+        private readonly IUserReadRepository _repo;
 
-        public JWTokenManager(string key, IUserRepository repo)
+        public JWTokenManager(string key, IUserReadRepository repo)
         {
             this.key = key;
             this._repo = repo;
         }
         public async Task<string> Authorize(string email, string password)
         {
-            User user = await _repo.FindUserByIdAsync(email);
+            User user = await _repo.FindUserByEmailAsync(email);
 
             if((user is not null)&&(user.Password.Equals(password)))
             {

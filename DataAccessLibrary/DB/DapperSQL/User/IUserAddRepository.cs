@@ -1,5 +1,4 @@
 ﻿using DataAccessLibrary.DB.Entities;
-using DataAccessLibrary.DB.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -8,9 +7,8 @@ using System.Threading.Tasks;
 
 namespace DataAccessLibrary.DB
 {
-    public interface IUserRepository
+    public interface IUserAddRepository
     {
-        Task<User> FindUserByIdAsync(string id);
-        Task InsertUserIntoTheDb(UserModel user);
+        Task InsertUserIntoTheDb(User user);
     }
 }

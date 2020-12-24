@@ -1,8 +1,8 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace DataAccessLibrary.DB.Models
+namespace WEBApi.DTOs
 {
-    public class UserModelBase
+    public class UserLoginModel
     {
         [Required]
         public string Email { get; set; }

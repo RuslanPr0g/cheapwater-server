@@ -1,5 +1,6 @@
 ﻿using DataAccessLibrary.DB;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.IdentityModel.Tokens;
 using System;
@@ -13,11 +14,9 @@ namespace WEBApi.Extensions
 {
     public static class JWTokenExtensions
     {
-        public static IServiceCollection AddJWTokens(this IServiceCollection services)
+        public static IServiceCollection AddJWTokens(this IServiceCollection services, IConfiguration conf)
         {
-            //move to appsetings/azure keyvault
-            string key = "This is the key, a very secret one";
-
+            string key = conf.GetValue<string>("Key");
             services.AddAuthentication(x =>
             {
                 x.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
@@ -36,9 +35,7 @@ namespace WEBApi.Extensions
                 };
             });
 
-            services.AddSingleton<IJWTokenManager>(x =>
-                    new JWTokenManager(key, x.GetService<IUserRepository>())
-            );
+            services.AddSingleton<IJWTokenManager>(x =>x.GetService<IJwtokenManagerFactory>().CreateTokenManager());
 
             return services;
         }

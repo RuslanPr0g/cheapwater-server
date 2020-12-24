@@ -4,9 +4,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace DataAccessLibrary.DB.Models
+namespace WEBApi.DTOs
 {
-    public class UserModel : UserModelBase
+    public class UserRegistrationModel : UserLoginModel
     {
         public string Nickname { get; set; }
     }

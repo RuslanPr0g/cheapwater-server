@@ -1,10 +1,11 @@
 ﻿using DataAccessLibrary.DB;
-using DataAccessLibrary.DB.Models;
+using DataAccessLibrary.DB.Entities;
 using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Net.Mail;
 using System.Threading.Tasks;
 using WEBApi.Authentication;
+using WEBApi.DTOs;
 
 namespace WEBApi.Controllers
 {
@@ -13,22 +14,26 @@ namespace WEBApi.Controllers
     public class AutherizationController: ControllerBase
     {
         private readonly IJWTokenManager _manager;
-        private readonly IUserRepository _repo;
+        private readonly IUserAddRepository _writerepo;
+        private readonly IModelConverter _converter;
 
-        public AutherizationController(IJWTokenManager manager, IUserRepository repo)
+        public AutherizationController(IJWTokenManager manager,
+            IUserAddRepository writerepo, IModelConverter converter)
         {
             this._manager = manager;
-            this._repo = repo;
+            this._writerepo = writerepo;
+            this._converter = converter;
         }
 
         [HttpPost("register")]
-        public async Task<ActionResult> RegisterUser([FromBody]UserModel user)
+        public async Task<ActionResult> RegisterUser([FromBody]UserRegistrationModel userDto)
         {
-            if (user is not null)
+            if (userDto is not null)
             {
-                if(IsValidUser(user))
+                if(IsValidUser(userDto))
                 {
-                    await _repo.InsertUserIntoTheDb(user);
+                    User user = _converter.ConvertUserFromDTO(userDto);
+                    await _writerepo.InsertUserIntoTheDb(user);
                     var token = await _manager.Authorize(user.Email, user.Password);
                     if (token is not null)
                     {
@@ -48,7 +53,7 @@ namespace WEBApi.Controllers
             }
         }
 
-        private bool IsValidUser(UserModel user)
+        private bool IsValidUser(UserRegistrationModel user)
         {
             return IsValidPassword(user.Password)&&IsValidEmail(user.Email)&&IsValidNickName(user.Nickname);
         }
@@ -74,7 +79,7 @@ namespace WEBApi.Controllers
         }
 
         [HttpPost("login")]
-        public async Task<ActionResult> LoginUser([FromBody] UserModelBase user)
+        public async Task<ActionResult> LoginUser([FromBody] UserLoginModel user)
         {
             if (user is not null)
             {

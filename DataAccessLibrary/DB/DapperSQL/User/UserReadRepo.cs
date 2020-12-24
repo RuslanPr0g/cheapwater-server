@@ -1,5 +1,4 @@
 ﻿using DataAccessLibrary.DB.Entities;
-using DataAccessLibrary.DB.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -8,18 +7,34 @@ using System.Threading.Tasks;
 
 namespace DataAccessLibrary.DB
 {
-    public class UserRepo : IUserRepository
+    public class UserReadRepo : IUserReadRepository
     {
         private readonly ISQLDataAccess _db;
 
-        public UserRepo(ISQLDataAccess db)
+        public UserReadRepo(ISQLDataAccess db)
         {
             this._db = db;
         }
 
+        public async Task<User> FindUserByEmailAsync(string email)
+        {
+            string sql = @"SELECT * FROM Users WHERE Email = @Email";
+            var p = new
+            {
+                Email = email
+            };
+            List<User> users = (await _db.LoadData<User, dynamic>(sql, p));
+            if (users.Count > 1)
+            {
+                throw new Exception("Duplicate email");
+            }
+            var user = users.FirstOrDefault();
+            return user;
+        }
+
         public async Task<User> FindUserByIdAsync(string id)
         {
-            string sql = @"SELECT * FROM USERS WHERE Id = @Id";
+            string sql = @"SELECT * FROM Users WHERE Id = @Id";
             var p = new 
             {
                 Id = id
@@ -33,11 +48,5 @@ namespace DataAccessLibrary.DB
             return user;
         }
 
-        public async Task InsertUserIntoTheDb(UserModel user)
-        {
-            string sql = @"INSERT Users(Id, Email, Password, Nickname) 
-                Values(UserID, Email, Password, Nickname)";
-            await _db.SaveData<UserModel>(sql, user);
-        }
     }
 }
