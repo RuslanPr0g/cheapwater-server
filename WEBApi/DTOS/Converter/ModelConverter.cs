@@ -9,7 +9,7 @@ namespace WEBApi.DTOs
 {
     public class ModelConverter : IModelConverter
     {
-        public User ConvertUserFromDTO(UserModel model)
+        public User ConvertUserFromDTO(UserRegistrationModel model)
         {
             if (model is not null)
             {

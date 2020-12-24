@@ -25,7 +25,7 @@ namespace WEBApi.Controllers
         }
 
         [HttpPost("register")]
-        public async Task<ActionResult> RegisterUser([FromBody]UserModel userDto)
+        public async Task<ActionResult> RegisterUser([FromBody]UserRegistrationModel userDto)
         {
             if (userDto is not null)
             {
@@ -52,7 +52,7 @@ namespace WEBApi.Controllers
             }
         }
 
-        private bool IsValidUser(UserModel user)
+        private bool IsValidUser(UserRegistrationModel user)
         {
             return IsValidPassword(user.Password)&&IsValidEmail(user.Email)&&IsValidNickName(user.Nickname);
         }
@@ -78,7 +78,7 @@ namespace WEBApi.Controllers
         }
 
         [HttpPost("login")]
-        public async Task<ActionResult> LoginUser([FromBody] UserModelBase user)
+        public async Task<ActionResult> LoginUser([FromBody] UserLoginModel user)
         {
             if (user is not null)
             {

@@ -9,6 +9,6 @@ namespace WEBApi.DTOs
 {
     public interface IModelConverter
     {
-        User ConvertUserFromDTO(UserModel model);
+        User ConvertUserFromDTO(UserRegistrationModel model);
     }
 }

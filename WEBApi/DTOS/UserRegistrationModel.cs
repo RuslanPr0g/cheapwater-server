@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace WEBApi.DTOs
 {
-    public class UserModel : UserModelBase
+    public class UserRegistrationModel : UserLoginModel
     {
         public string Nickname { get; set; }
     }

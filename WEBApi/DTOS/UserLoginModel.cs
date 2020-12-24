@@ -2,7 +2,7 @@
 
 namespace WEBApi.DTOs
 {
-    public class UserModelBase
+    public class UserLoginModel
     {
         [Required]
         public string Email { get; set; }

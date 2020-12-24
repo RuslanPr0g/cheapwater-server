@@ -24,7 +24,7 @@ namespace WebApi.Test
             _sut = new AutherizationController(_managerMock.Object, _repoMock.Object, _converter);
             
         }
-        private void BasicMockSetup(UserModel user)
+        private void BasicMockSetup(UserRegistrationModel user)
         {
             _repoMock.Setup(x => x.InsertUserIntoTheDb(_converter.ConvertUserFromDTO(user))).Returns(Task.CompletedTask);
             _managerMock.Setup(x => x.Authorize("", "")).ReturnsAsync("ValidAccessToken");
@@ -33,7 +33,7 @@ namespace WebApi.Test
         public async Task RegisterUser_ShouldFail_EmptyUser()
         {
             //Arrange
-            UserModel user = null;
+            UserRegistrationModel user = null;
             //Act
             BasicMockSetup(user);
             //Assert
@@ -43,7 +43,7 @@ namespace WebApi.Test
         public async Task RegisterUser_ShouldFail_BadEmail()
         {
             //Arrange
-            UserModel user = new UserModel
+            UserRegistrationModel user = new UserRegistrationModel
             {
                 Email = "improper email",
                 Nickname = "ProperNickName",
@@ -58,7 +58,7 @@ namespace WebApi.Test
         public async Task RegisterUser_ShouldFail_BadNickname()
         {
             //Arrange
-            UserModel user = new UserModel
+            UserRegistrationModel user = new UserRegistrationModel
             {
                 Email = "email@gmail.com",
                 Nickname = "1",
@@ -73,7 +73,7 @@ namespace WebApi.Test
         public async Task LoginUser_ShouldFail_EmptyUser()
         {
             //Arrange
-            UserModel user = null;
+            UserRegistrationModel user = null;
             //Act
             BasicMockSetup(user);
             //Assert
