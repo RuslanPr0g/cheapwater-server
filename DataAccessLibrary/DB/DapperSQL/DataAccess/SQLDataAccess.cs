@@ -53,6 +53,5 @@ namespace DataAccessLibrary
                 await connection.ExecuteAsync(sql, parameters);
             }
         }
-
     }
 }

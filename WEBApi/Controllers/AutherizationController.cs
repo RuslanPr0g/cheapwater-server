@@ -2,90 +2,59 @@
 using DataAccessLibrary.DB.Entities;
 using Microsoft.AspNetCore.Mvc;
 using System;
+using System.Collections.Generic;
 using System.Net.Mail;
 using System.Threading.Tasks;
 using WEBApi.Authentication;
 using WEBApi.DTOs;
+using WEBApi.Validators;
 
 namespace WEBApi.Controllers
 {
     [ApiController]
     [Route("api/auth")]
-    public class AutherizationController: ControllerBase
+    public class AutherizationController : ControllerBase
     {
         private readonly IJWTokenManager _manager;
-        private readonly IUserReadRepository _readrepo;
         private readonly IUserAddRepository _writerepo;
         private readonly IModelConverter _converter;
+        private readonly RegistrationValidator _validator;
 
-        public AutherizationController(IJWTokenManager manager, IUserReadRepository readrepo,
-            IUserAddRepository writerepo, IModelConverter converter)
+        public AutherizationController(IJWTokenManager manager, IUserAddRepository writerepo, 
+            IModelConverter converter, RegistrationValidator validator)
         {
             this._manager = manager;
-            this._readrepo = readrepo;
             this._writerepo = writerepo;
             this._converter = converter;
+            this._validator = validator;
         }
 
         [HttpPost("register")]
-        public async Task<ActionResult> RegisterUser([FromBody]UserRegistrationModel userDto)
+        public async Task<ActionResult> RegisterUser([FromBody] UserRegistrationModel userDto)
         {
-            if (userDto is not null)
+            var results = _validator.Validate(userDto);
+            if (!results.IsValid)
             {
-                if(IsValidUser(userDto))
+                List<string> ErrorMessages = new List<string>();
+                foreach (var Error in results.Errors)
                 {
-                    User user = _converter.ConvertUserFromDTO(userDto);
-                    if (!(await _readrepo.CheckIsEmailPresent(user.Email)))
-                    {
-                        await _writerepo.InsertUserIntoTheDb(user);
-                        var token = await _manager.Authorize(user.Email, user.Password);
-                        if (token is not null)
-                        {
-                            return Ok(token);
-                        }
-                        return Unauthorized();
-                    }
-                    else
-                    {
-                        return BadRequest("Email is already taken");
-                    }
+                    ErrorMessages.Add(Error.ErrorMessage);
                 }
-                else
-                {
-                    return BadRequest("User is not valid");
-                }
-                
+                return BadRequest(ErrorMessages);
             }
-            else
-            {
-                return BadRequest("No data was provided");
-            }
-        }
-        private bool IsValidUser(UserRegistrationModel user)
-        {
-            return IsValidPassword(user.Password)&&IsValidEmail(user.Email)&&IsValidNickName(user.Nickname);
-        }
-        private bool IsValidPassword(string password)
-        {
-            return !String.IsNullOrEmpty(password)&& password.Length > 6;
-        }
-        private bool IsValidEmail(string email)
-        {
-            try
-            {
-                var addr = new MailAddress(email);
-                return addr.Address.Equals(email);
-            }
-            catch
-            {
-                return false;
-            }
-        }
-        private bool IsValidNickName(string nickname)
-        {
-            return !String.IsNullOrEmpty(nickname) && nickname.Length > 2;
-        }
 
+            User user = _converter.ConvertUserFromDTO(userDto);
+
+            await _writerepo.InsertUserIntoTheDb(user);
+
+            var token = await _manager.Authorize(user.Email, user.Password);
+            if (token is not null)
+            {
+                return Ok(token);
+            }
+            return Unauthorized();
+        }
+        
         [HttpPost("login")]
         public async Task<ActionResult> LoginUser([FromBody] UserLoginModel user)
         {
