@@ -16,6 +16,21 @@ namespace DataAccessLibrary.DB
             this._db = db;
         }
 
+        public async Task<bool> CheckIsEmailPresent(string email)
+        {
+            string sql = @"Select Count(*) FROM Users WHERE Email = @Email";
+            var p = new
+            {
+                Email = email
+            };
+            int emailCount = (await _db.LoadData<int, dynamic>(sql, p)).FirstOrDefault();
+            if(emailCount==0)
+            {
+                return false;
+            }
+            return true;
+        }
+
         public async Task<User> FindUserByEmailAsync(string email)
         {
             string sql = @"SELECT * FROM Users WHERE Email = @Email";
