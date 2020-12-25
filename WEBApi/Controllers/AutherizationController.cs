@@ -14,13 +14,15 @@ namespace WEBApi.Controllers
     public class AutherizationController: ControllerBase
     {
         private readonly IJWTokenManager _manager;
+        private readonly IUserReadRepository _readrepo;
         private readonly IUserAddRepository _writerepo;
         private readonly IModelConverter _converter;
 
-        public AutherizationController(IJWTokenManager manager,
+        public AutherizationController(IJWTokenManager manager, IUserReadRepository readrepo,
             IUserAddRepository writerepo, IModelConverter converter)
         {
             this._manager = manager;
+            this._readrepo = readrepo;
             this._writerepo = writerepo;
             this._converter = converter;
         }
@@ -33,13 +35,20 @@ namespace WEBApi.Controllers
                 if(IsValidUser(userDto))
                 {
                     User user = _converter.ConvertUserFromDTO(userDto);
-                    await _writerepo.InsertUserIntoTheDb(user);
-                    var token = await _manager.Authorize(user.Email, user.Password);
-                    if (token is not null)
+                    if (!(await _readrepo.CheckIsEmailPresent(user.Email)))
                     {
-                        return Ok(token);
+                        await _writerepo.InsertUserIntoTheDb(user);
+                        var token = await _manager.Authorize(user.Email, user.Password);
+                        if (token is not null)
+                        {
+                            return Ok(token);
+                        }
+                        return Unauthorized();
                     }
-                    return Unauthorized();
+                    else
+                    {
+                        return BadRequest("Email is already taken");
+                    }
                 }
                 else
                 {
@@ -52,7 +61,6 @@ namespace WEBApi.Controllers
                 return BadRequest("No data was provided");
             }
         }
-
         private bool IsValidUser(UserRegistrationModel user)
         {
             return IsValidPassword(user.Password)&&IsValidEmail(user.Email)&&IsValidNickName(user.Nickname);
