@@ -18,13 +18,15 @@ namespace WEBApi.Validators
             RuleFor(user => user.Email)
                 .NotEmpty().WithMessage("Email can't be empty")
                 .EmailAddress().WithMessage("Not a proper email address")
-                .Must(BeAvailable).WithMessage("That email is already taken");
+                .Must(BeAvailable).WithMessage("Email is already taken");
             RuleFor(user => user.Nickname)
                 .NotEmpty().WithMessage("Nickname can't be empty")
-                .MinimumLength(2).WithMessage("Nickname is too short");
+                .MinimumLength(2).WithMessage("Nickname is too short")
+                .MaximumLength(32).WithMessage("Nickname is too long");
             RuleFor(user=>user.Password)
                 .NotEmpty().WithMessage("Password can't be empty")
-                .MinimumLength(6).WithMessage("Password is too short");
+                .MinimumLength(6).WithMessage("Password is too short")
+                .MaximumLength(64).WithMessage("Password is too long");
         }
         protected bool BeAvailable(string email)
         {
