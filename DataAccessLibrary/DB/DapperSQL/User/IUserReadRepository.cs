@@ -11,5 +11,6 @@ namespace DataAccessLibrary.DB
     {
         Task<User> FindUserByIdAsync(string id);
         Task<User> FindUserByEmailAsync(string email);
+        Task<bool> CheckIsEmailPresent(string email);
     }
 }

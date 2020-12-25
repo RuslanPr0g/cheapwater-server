@@ -9,6 +9,11 @@ namespace DataAccessLibrary.DB
 {
     public class MockUserRepo : IUserReadRepository
     {
+        public Task<bool> CheckIsEmailPresent(string email)
+        {
+            throw new NotImplementedException();
+        }
+
         public Task<User> FindUserByEmailAsync(string email)
         {
             throw new NotImplementedException();
