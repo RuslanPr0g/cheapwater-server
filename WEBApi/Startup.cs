@@ -18,6 +18,7 @@ using WEBApi.Extensions;
 using Microsoft.EntityFrameworkCore;
 using DataAccessLibrary.DB;
 using WEBApi.DTOs;
+using WEBApi.Validators;
 
 namespace WEBApi
 {
@@ -51,8 +52,8 @@ namespace WEBApi
 
             services.AddSingleton<IJwtokenManagerFactory, JwtokenManagerFactory>();
 
-
-
+            services.AddValidators();
+           
             services.AddJWTokens(Configuration);
 
             services.AddCors();
