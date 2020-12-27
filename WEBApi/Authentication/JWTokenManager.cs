@@ -1,5 +1,6 @@
 ﻿using DataAccessLibrary.DB;
 using DataAccessLibrary.DB.Entities;
+using DataAccessLibrary.Encryption;
 using Microsoft.IdentityModel.Tokens;
 using System;
 using System.Collections.Generic;
@@ -15,17 +16,21 @@ namespace WEBApi.Authentication
     {
         private readonly string key;
         private readonly IUserReadRepository _repo;
+        private readonly IEncrypter _encrypter;
 
-        public JWTokenManager(string key, IUserReadRepository repo)
+        public JWTokenManager(string key, IUserReadRepository repo, IEncrypter encrypter)
         {
             this.key = key;
             this._repo = repo;
+            this._encrypter = encrypter;
         }
         public async Task<string> Authorize(string email, string password)
         {
             User user = await _repo.FindUserByEmailAsync(email);
 
-            if((user is not null)&&(user.Password.Equals(password)))
+            string encryptedPassword = await _encrypter.Encrypt(password);
+
+            if((user is not null)&&(user.Password.Equals(encryptedPassword)))
             {
                 var TokenHandler = new JwtSecurityTokenHandler();
                 var TokenKey = Encoding.ASCII.GetBytes(key);
