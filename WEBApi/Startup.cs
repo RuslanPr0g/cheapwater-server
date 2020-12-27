@@ -40,7 +40,7 @@ namespace WEBApi
             });
             
             services.AddDbContext<AuthContext>(x =>
-                    x.UseSqlServer(Configuration.GetConnectionString("Standard"),
+                    x.UseNpgsql(Configuration.GetConnectionString("Standard"),
                     options => options.MigrationsAssembly(nameof(WEBApi)))
             );
 

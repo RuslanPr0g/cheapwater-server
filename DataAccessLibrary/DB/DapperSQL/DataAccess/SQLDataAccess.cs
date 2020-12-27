@@ -1,5 +1,6 @@
 ﻿using Dapper;
 using Microsoft.Extensions.Configuration;
+using Npgsql;
 using System;
 using System.Collections.Generic;
 using System.Data;
@@ -25,7 +26,7 @@ namespace DataAccessLibrary
         {
             string connectionString = _configuration.GetConnectionString(ConnectionStringName);
 
-            using (IDbConnection connection = new SqlConnection(connectionString))
+            using (IDbConnection connection = new NpgsqlConnection(connectionString))
             {
                 var data = await connection.QueryAsync<T>(sql);
 
@@ -36,7 +37,7 @@ namespace DataAccessLibrary
         {
             string connectionString = _configuration.GetConnectionString(ConnectionStringName);
 
-            using (IDbConnection connection = new SqlConnection(connectionString))
+            using (IDbConnection connection = new NpgsqlConnection(connectionString))
             {
                 var data = await connection.QueryAsync<T>(sql, parameters);
 
@@ -48,7 +49,7 @@ namespace DataAccessLibrary
         {
             string connectionString = _configuration.GetConnectionString(ConnectionStringName);
 
-            using (IDbConnection connection = new SqlConnection(connectionString))
+            using (IDbConnection connection = new NpgsqlConnection(connectionString))
             {
                 await connection.ExecuteAsync(sql, parameters);
             }

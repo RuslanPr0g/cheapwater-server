@@ -2,7 +2,7 @@
 
 namespace WEBApi.Migrations
 {
-    public partial class InitialMigration : Migration
+    public partial class PostgreDBMSChange : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -10,10 +10,11 @@ namespace WEBApi.Migrations
                 name: "Users",
                 columns: table => new
                 {
-                    Id = table.Column<string>(type: "nvarchar(450)", nullable: false),
-                    Username = table.Column<string>(type: "nvarchar(60)", maxLength: 60, nullable: true),
-                    Email = table.Column<string>(type: "nvarchar(60)", maxLength: 60, nullable: false),
-                    Password = table.Column<string>(type: "nvarchar(60)", maxLength: 60, nullable: false)
+                    Id = table.Column<string>(type: "text", nullable: false),
+                    Username = table.Column<string>(type: "character varying(60)", maxLength: 60, nullable: true),
+                    Email = table.Column<string>(type: "character varying(60)", maxLength: 60, nullable: false),
+                    Password = table.Column<string>(type: "character varying(60)", maxLength: 60, nullable: false),
+                    Balance = table.Column<int>(type: "integer", nullable: false)
                 },
                 constraints: table =>
                 {
