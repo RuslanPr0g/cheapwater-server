@@ -11,12 +11,13 @@ using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
 using WEBApi.DTOs;
+using System.Threading;
 
 namespace WEBApi.Controllers
 {
     [ApiController]
     [Route("api/profile")]
-    public class ProfileController:ControllerBase
+    public class ProfileController : ControllerBase
     {
         private readonly IUserReadRepository _repo;
         private readonly IModelConverter _converter;
@@ -26,24 +27,38 @@ namespace WEBApi.Controllers
             _repo = repo;
             this._converter = converter;
         }
+
         [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
         [HttpGet("personal_data")]
-        public async Task<ActionResult<UserInfoModel>> GetPersonalData()
+        public async Task<ActionResult<UserInfoModel>> GetPersonalData(CancellationToken ct)
         {
-            string id = GetUserIdOfCurrentRequest();
-            if (!String.IsNullOrEmpty(id))
+            try
             {
-                User user = await _repo.FindUserByIdAsync(id);
-                if (user is not null)
+                string id = GetUserIdOfCurrentRequest();
+                if (!String.IsNullOrEmpty(id))
                 {
-                    UserInfoModel userInfo = _converter.ConvertUserToInfoModel(user);
-                    return Ok(userInfo);
+                    User user = await _repo.FindUserByIdAsync(id);
+                    if (user is not null)
+                    {
+                        ct.ThrowIfCancellationRequested();
+
+                        UserInfoModel userInfo = _converter.ConvertUserToInfoModel(user);
+                        return Ok(userInfo);
+                    }
+                    return NotFound();
                 }
-                return NotFound();
+                else
+                {
+                    return BadRequest("Wrong ID");
+                }
             }
-            else
+            catch (TaskCanceledException)
             {
-                return BadRequest();
+                return BadRequest("Canceled");
+            }
+            catch (Exception)
+            {
+                return BadRequest("Something went wrong");
             }
         }
         private string GetUserIdOfCurrentRequest()
