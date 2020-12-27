@@ -18,7 +18,8 @@ namespace DataAccessLibrary.DB
 
         public async Task<bool> CheckIsEmailPresent(string email)
         {
-            string sql = @"Select Count(*) FROM Users WHERE Email = @Email";
+            string sql = "Select Count(*) FROM " + DelimitedString("Users") + " WHERE " 
+                + DelimitedString("Email")+" = @Email";
             var p = new
             {
                 Email = email
@@ -31,9 +32,16 @@ namespace DataAccessLibrary.DB
             return true;
         }
 
+        private string DelimitedString(string str)
+        {
+            string delimeter = '"'.ToString();
+            return delimeter + str + delimeter;
+        }
+
         public async Task<User> FindUserByEmailAsync(string email)
         {
-            string sql = @"SELECT * FROM Users WHERE Email = @Email";
+            string sql = @"SELECT * FROM"+DelimitedString("Users")+" WHERE " 
+                + DelimitedString("Email")+" = @Email";
             var p = new
             {
                 Email = email
@@ -49,7 +57,8 @@ namespace DataAccessLibrary.DB
 
         public async Task<User> FindUserByIdAsync(string id)
         {
-            string sql = @"SELECT * FROM Users WHERE Id = @Id";
+            string sql = @"SELECT * FROM" + DelimitedString("Users") + " WHERE "
+                + DelimitedString("Id") + " = @Id";
             var p = new 
             {
                 Id = id
