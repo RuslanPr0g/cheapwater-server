@@ -66,9 +66,9 @@ namespace WEBApi.Controllers
             {
                 return BadRequest("Canceled");
             }
-            catch (Exception)
+            catch (Exception e)
             {
-                return BadRequest("Something went wrong");
+                return BadRequest("Something went wrong: " + e.Message);
             }
         }
 
