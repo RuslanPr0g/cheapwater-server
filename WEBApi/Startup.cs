@@ -46,11 +46,11 @@ namespace WEBApi
 
             services.AddScoped<IUserAddRepository, UserAddRepository>();
 
+            services.AddEncryption();
+
             services.AddSingleton<IModelConverter, ModelConverter>();
 
             services.AddDapperDatabase();
-
-            services.AddSingleton<IJwtokenManagerFactory, JwtokenManagerFactory>();
 
             services.AddValidators();
            

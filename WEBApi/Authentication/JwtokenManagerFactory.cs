@@ -7,6 +7,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using WEBApi.Authentication;
 using Microsoft.Extensions.DependencyInjection;
+using DataAccessLibrary.Encryption;
 
 namespace WEBApi
 {
@@ -21,7 +22,7 @@ namespace WEBApi
         public IJWTokenManager CreateTokenManager()
         {
             string key = _provider.GetService<IConfiguration>().GetValue<string>("Key");
-            return new JWTokenManager(key, _provider.GetService<IUserReadRepository>());
+            return new JWTokenManager(key, _provider.GetService<IUserReadRepository>(),_provider.GetService<IEncrypter>());
         }
     }
 }
