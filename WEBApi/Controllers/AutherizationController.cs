@@ -32,7 +32,7 @@ namespace WEBApi.Controllers
         [HttpPost("register")]
         public async Task<ActionResult> RegisterUser([FromBody] UserRegistrationModel userDto)
         {
-            var results = _validator.Validate(userDto);
+            var results = await _validator.ValidateAsync(userDto);
             if (!results.IsValid)
             {
                 List<string> ErrorMessages = new List<string>();
