@@ -19,7 +19,7 @@ namespace DataAccessLibrary.Encryption
         {
             var bytes = Encoding.UTF8.GetBytes(ToBeEncrypt);
             var hash = _algorithm.ComputeHash(bytes);
-            string output = Encoding.UTF8.GetString(hash);
+            string output = Convert.ToBase64String(hash);
             return output;
         }
     }
