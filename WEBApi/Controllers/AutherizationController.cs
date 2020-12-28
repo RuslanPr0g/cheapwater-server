@@ -19,13 +19,11 @@ namespace WEBApi.Controllers
     [Route("api/auth")]
     public class AutherizationController : ControllerBase
     {
-        private readonly IJWTokenManager _manager;
         private readonly RegistrationValidator _validator;
         private readonly IMediator _mediator;
 
         public AutherizationController(IJWTokenManager manager, RegistrationValidator validator, IMediator mediator)
         {
-            this._manager = manager;
             this._validator = validator;
             this._mediator = mediator;
         }
