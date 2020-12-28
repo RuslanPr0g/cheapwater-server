@@ -53,7 +53,7 @@ namespace WEBApi.Controllers
 
                 await _writerepo.InsertUserIntoTheDb(user);
 
-                var token = await _manager.Authorize(user.Email, user.Password);
+                var token = await _manager.Authorize(user.Email, userDto.Password);
 
                 if (token is not null)
                 {
