@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace DataAccessLibrary.DB
@@ -16,7 +17,7 @@ namespace DataAccessLibrary.DB
             this._db = db;
         }
 
-        public async Task<bool> CheckIsEmailPresent(string email)
+        public async Task<bool> CheckIsEmailPresent(string email, CancellationToken cancellation)
         {
             string sql = "Select Count(*) FROM " + DelimitedString("Users") + " WHERE " 
                 + DelimitedString("Email")+" = @Email";
@@ -24,7 +25,7 @@ namespace DataAccessLibrary.DB
             {
                 Email = email
             };
-            int emailCount = (await _db.LoadData<int, dynamic>(sql, p)).FirstOrDefault();
+            int emailCount = (await _db.LoadData<int, dynamic>(sql, p, cancellation)).FirstOrDefault();
             if(emailCount==0)
             {
                 return false;
@@ -38,7 +39,7 @@ namespace DataAccessLibrary.DB
             return delimeter + str + delimeter;
         }
 
-        public async Task<User> FindUserByEmailAsync(string email)
+        public async Task<User> FindUserByEmailAsync(string email, CancellationToken cancellation)
         {
             string sql = @"SELECT * FROM"+DelimitedString("Users")+" WHERE " 
                 + DelimitedString("Email")+" = @Email";
@@ -46,7 +47,7 @@ namespace DataAccessLibrary.DB
             {
                 Email = email
             };
-            List<User> users = (await _db.LoadData<User, dynamic>(sql, p));
+            List<User> users = (await _db.LoadData<User, dynamic>(sql, p, cancellation));
             if (users.Count > 1)
             {
                 throw new Exception("Duplicate email");
@@ -55,7 +56,7 @@ namespace DataAccessLibrary.DB
             return user;
         }
 
-        public async Task<User> FindUserByIdAsync(string id)
+        public async Task<User> FindUserByIdAsync(string id, CancellationToken cancellation)
         {
             string sql = @"SELECT * FROM" + DelimitedString("Users") + " WHERE "
                 + DelimitedString("Id") + " = @Id";
@@ -63,7 +64,7 @@ namespace DataAccessLibrary.DB
             {
                 Id = id
             };
-            List<User> users = (await _db.LoadData<User, dynamic>(sql, p));
+            List<User> users = (await _db.LoadData<User, dynamic>(sql, p, cancellation));
             if(users.Count>1)
             {
                 throw new Exception("Duplicate primary key");

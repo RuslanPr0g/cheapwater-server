@@ -31,11 +31,11 @@ namespace WEBApi.Controllers
         }
 
         [HttpPost("register")]
-        public async Task<ActionResult> RegisterUser([FromBody] UserRegistrationModel userDto, CancellationToken ct)
+        public async Task<ActionResult> RegisterUser([FromBody] UserRegistrationModel userDto, CancellationToken cancellation)
         {
             try
             {
-                var results = await _validator.ValidateAsync(userDto, ct);
+                var results = await _validator.ValidateAsync(userDto, cancellation);
 
                 if (!results.IsValid)
                 {
@@ -47,13 +47,13 @@ namespace WEBApi.Controllers
                     return BadRequest(ErrorMessages);
                 }
 
-                ct.ThrowIfCancellationRequested();
+                cancellation.ThrowIfCancellationRequested();
 
                 User user = _converter.ConvertUserFromDTO(userDto);
 
                 await _writerepo.InsertUserIntoTheDb(user);
 
-                var token = await _manager.Authorize(user.Email, userDto.Password);
+                var token = await _manager.Authorize(user.Email, userDto.Password, cancellation);
 
                 if (token is not null)
                 {
@@ -73,15 +73,15 @@ namespace WEBApi.Controllers
         }
 
         [HttpPost("login")]
-        public async Task<ActionResult> LoginUser([FromBody] UserLoginModel user, CancellationToken ct)
+        public async Task<ActionResult> LoginUser([FromBody] UserLoginModel user, CancellationToken cancellation)
         {
             try
             {
-                ct.ThrowIfCancellationRequested();
+                cancellation.ThrowIfCancellationRequested();
 
                 if (user is not null)
                 {
-                    var token = await _manager.Authorize(user.Email, user.Password);
+                    var token = await _manager.Authorize(user.Email, user.Password, cancellation);
                     if (token is not null)
                     {
                         return Ok(token);

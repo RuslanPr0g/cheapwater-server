@@ -30,17 +30,17 @@ namespace WEBApi.Controllers
 
         [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
         [HttpGet("personal_data")]
-        public async Task<ActionResult<UserInfoModel>> GetPersonalData(CancellationToken ct)
+        public async Task<ActionResult<UserInfoModel>> GetPersonalData(CancellationToken cancellation)
         {
             try
             {
                 string id = GetUserIdOfCurrentRequest();
                 if (!String.IsNullOrEmpty(id))
                 {
-                    User user = await _repo.FindUserByIdAsync(id);
+                    User user = await _repo.FindUserByIdAsync(id, cancellation);
                     if (user is not null)
                     {
-                        ct.ThrowIfCancellationRequested();
+                        cancellation.ThrowIfCancellationRequested();
 
                         UserInfoModel userInfo = _converter.ConvertUserToInfoModel(user);
                         return Ok(userInfo);
