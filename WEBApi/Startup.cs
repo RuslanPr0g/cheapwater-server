@@ -19,6 +19,7 @@ using Microsoft.EntityFrameworkCore;
 using DataAccessLibrary.DB;
 using WEBApi.DTOs;
 using WEBApi.Validators;
+using MediatR;
 
 namespace WEBApi
 {
@@ -55,6 +56,8 @@ namespace WEBApi
             services.AddValidators();
            
             services.AddJWTokens(Configuration);
+
+            services.AddMediatR(typeof(Startup));
 
             services.AddCors();
         }
