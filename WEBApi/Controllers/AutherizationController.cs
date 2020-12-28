@@ -8,6 +8,7 @@ using System.Threading.Tasks;
 using WEBApi.Authentication;
 using WEBApi.DTOs;
 using WEBApi.Validators;
+using System.Threading;
 
 namespace WEBApi.Controllers
 {
@@ -20,7 +21,7 @@ namespace WEBApi.Controllers
         private readonly IModelConverter _converter;
         private readonly RegistrationValidator _validator;
 
-        public AutherizationController(IJWTokenManager manager, IUserAddRepository writerepo, 
+        public AutherizationController(IJWTokenManager manager, IUserAddRepository writerepo,
             IModelConverter converter, RegistrationValidator validator)
         {
             this._manager = manager;
@@ -30,46 +31,75 @@ namespace WEBApi.Controllers
         }
 
         [HttpPost("register")]
-        public async Task<ActionResult> RegisterUser([FromBody] UserRegistrationModel userDto)
+        public async Task<ActionResult> RegisterUser([FromBody] UserRegistrationModel userDto, CancellationToken ct)
         {
-            var results = await _validator.ValidateAsync(userDto);
-            if (!results.IsValid)
+            try
             {
-                List<string> ErrorMessages = new List<string>();
-                foreach (var Error in results.Errors)
+                var results = await _validator.ValidateAsync(userDto, ct);
+
+                if (!results.IsValid)
                 {
-                    ErrorMessages.Add(Error.ErrorMessage);
+                    List<string> ErrorMessages = new List<string>();
+                    foreach (var Error in results.Errors)
+                    {
+                        ErrorMessages.Add(Error.ErrorMessage);
+                    }
+                    return BadRequest(ErrorMessages);
                 }
-                return BadRequest(ErrorMessages);
-            }
 
-            User user = _converter.ConvertUserFromDTO(userDto);
+                ct.ThrowIfCancellationRequested();
 
-            await _writerepo.InsertUserIntoTheDb(user);
+                User user = _converter.ConvertUserFromDTO(userDto);
 
-            var token = await _manager.Authorize(user.Email, user.Password);
-            if (token is not null)
-            {
-                return Ok(token);
-            }
-            return Unauthorized();
-        }
-        
-        [HttpPost("login")]
-        public async Task<ActionResult> LoginUser([FromBody] UserLoginModel user)
-        {
-            if (user is not null)
-            {
-                var token = await _manager.Authorize(user.Email, user.Password);
+                await _writerepo.InsertUserIntoTheDb(user);
+
+                var token = await _manager.Authorize(user.Email, userDto.Password);
+
                 if (token is not null)
                 {
                     return Ok(token);
                 }
+
                 return Unauthorized();
             }
-            else
+            catch (TaskCanceledException)
             {
-                return BadRequest();
+                return BadRequest("Canceled");
+            }
+            catch (Exception e)
+            {
+                return BadRequest("Something went wrong: " + e.Message);
+            }
+        }
+
+        [HttpPost("login")]
+        public async Task<ActionResult> LoginUser([FromBody] UserLoginModel user, CancellationToken ct)
+        {
+            try
+            {
+                ct.ThrowIfCancellationRequested();
+
+                if (user is not null)
+                {
+                    var token = await _manager.Authorize(user.Email, user.Password);
+                    if (token is not null)
+                    {
+                        return Ok(token);
+                    }
+                    return Unauthorized();
+                }
+                else
+                {
+                    return BadRequest();
+                }
+            }
+            catch (TaskCanceledException)
+            {
+                return BadRequest("Canceled");
+            }
+            catch (Exception)
+            {
+                return BadRequest("Something went wrong");
             }
         }
         //Authorization check
