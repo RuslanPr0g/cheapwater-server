@@ -9,6 +9,9 @@ using WEBApi.Authentication;
 using WEBApi.DTOs;
 using WEBApi.Validators;
 using System.Threading;
+using MediatR;
+using WEBApi.CQRS.Actions.Commands;
+using WEBApi.CQRS.Actions.Queries;
 
 namespace WEBApi.Controllers
 {
@@ -17,25 +20,22 @@ namespace WEBApi.Controllers
     public class AutherizationController : ControllerBase
     {
         private readonly IJWTokenManager _manager;
-        private readonly IUserAddRepository _writerepo;
-        private readonly IModelConverter _converter;
         private readonly RegistrationValidator _validator;
+        private readonly IMediator _mediator;
 
-        public AutherizationController(IJWTokenManager manager, IUserAddRepository writerepo,
-            IModelConverter converter, RegistrationValidator validator)
+        public AutherizationController(IJWTokenManager manager, RegistrationValidator validator, IMediator mediator)
         {
             this._manager = manager;
-            this._writerepo = writerepo;
-            this._converter = converter;
             this._validator = validator;
+            this._mediator = mediator;
         }
 
         [HttpPost("register")]
-        public async Task<ActionResult> RegisterUser([FromBody] UserRegistrationModel userDto, CancellationToken ct)
+        public async Task<ActionResult> RegisterUser([FromBody] UserRegistrationModel userDto, CancellationToken cancellation)
         {
             try
             {
-                var results = await _validator.ValidateAsync(userDto, ct);
+                var results = await _validator.ValidateAsync(userDto, cancellation);
 
                 if (!results.IsValid)
                 {
@@ -47,13 +47,11 @@ namespace WEBApi.Controllers
                     return BadRequest(ErrorMessages);
                 }
 
-                ct.ThrowIfCancellationRequested();
+                cancellation.ThrowIfCancellationRequested();
 
-                User user = _converter.ConvertUserFromDTO(userDto);
+                var command = new RegistrationCommand(userDto);
 
-                await _writerepo.InsertUserIntoTheDb(user);
-
-                var token = await _manager.Authorize(user.Email, userDto.Password);
+                string token = await _mediator.Send(command, cancellationToken: cancellation);
 
                 if (token is not null)
                 {
@@ -73,15 +71,18 @@ namespace WEBApi.Controllers
         }
 
         [HttpPost("login")]
-        public async Task<ActionResult> LoginUser([FromBody] UserLoginModel user, CancellationToken ct)
+        public async Task<ActionResult> LoginUser([FromBody] UserLoginModel user, CancellationToken cancellation)
         {
             try
             {
-                ct.ThrowIfCancellationRequested();
+                cancellation.ThrowIfCancellationRequested();
 
                 if (user is not null)
                 {
-                    var token = await _manager.Authorize(user.Email, user.Password);
+                    LoginQuery query = new(user);
+
+                    string token = await _mediator.Send(query, cancellation);
+                    
                     if (token is not null)
                     {
                         return Ok(token);

@@ -7,6 +7,7 @@ using System.Data;
 using System.Data.SqlClient;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace DataAccessLibrary
@@ -22,36 +23,43 @@ namespace DataAccessLibrary
             this._configuration = configuration;
         }
 
-        public async Task<List<T>> LoadDataNoParam<T>(string sql)
+        public async Task<List<T>> LoadDataNoParam<T>(string sql, CancellationToken token)
         {
             string connectionString = _configuration.GetConnectionString(ConnectionStringName);
 
             using (IDbConnection connection = new NpgsqlConnection(connectionString))
             {
-                var data = await connection.QueryAsync<T>(sql);
+
+                CommandDefinition command = new(sql, cancellationToken: token);
+
+                var data = await connection.QueryAsync<T>(command:command);
 
                 return data.ToList();
             }
         }
-        public async Task<List<T>> LoadData<T, U>(string sql, U parameters)
+        public async Task<List<T>> LoadData<T, U>(string sql, U parameters, CancellationToken token)
         {
             string connectionString = _configuration.GetConnectionString(ConnectionStringName);
 
             using (IDbConnection connection = new NpgsqlConnection(connectionString))
             {
-                var data = await connection.QueryAsync<T>(sql, parameters);
+                CommandDefinition command = new(sql, parameters:parameters, cancellationToken:token);
+
+                var data = await connection.QueryAsync<T>(command);
 
                 return data.ToList();
             }
         }
 
-        public async Task SaveData<T>(string sql, T parameters)
+        public async Task SaveData<T>(string sql, T parameters, CancellationToken token)
         {
             string connectionString = _configuration.GetConnectionString(ConnectionStringName);
 
             using (IDbConnection connection = new NpgsqlConnection(connectionString))
             {
-                await connection.ExecuteAsync(sql, parameters);
+                CommandDefinition command = new(sql, parameters: parameters, cancellationToken: token);
+
+                await connection.ExecuteAsync(command);
             }
         }
     }

@@ -8,6 +8,7 @@ using System.IdentityModel.Tokens.Jwt;
 using System.Linq;
 using System.Security.Claims;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace WEBApi.Authentication
@@ -24,9 +25,9 @@ namespace WEBApi.Authentication
             this._repo = repo;
             this._encrypter = encrypter;
         }
-        public async Task<string> Authorize(string email, string password)
+        public async Task<string> Authorize(string email, string password, CancellationToken cancellation)
         {
-            User user = await _repo.FindUserByEmailAsync(email);
+            User user = await _repo.FindUserByEmailAsync(email, cancellation);
 
             string encryptedPassword = await _encrypter.Encrypt(password);
 

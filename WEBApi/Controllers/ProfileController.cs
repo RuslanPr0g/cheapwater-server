@@ -12,6 +12,8 @@ using System.Security.Claims;
 using System.Threading.Tasks;
 using WEBApi.DTOs;
 using System.Threading;
+using MediatR;
+using WEBApi.CQRS.Actions.Queries;
 
 namespace WEBApi.Controllers
 {
@@ -21,31 +23,34 @@ namespace WEBApi.Controllers
     {
         private readonly IUserReadRepository _repo;
         private readonly IModelConverter _converter;
+        private readonly IMediator _mediator;
 
-        public ProfileController(IUserReadRepository repo, IModelConverter converter)
+        public ProfileController(IUserReadRepository repo, IModelConverter converter, IMediator mediator)
         {
             _repo = repo;
             this._converter = converter;
+            this._mediator = mediator;
         }
 
         [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
         [HttpGet("personal_data")]
-        public async Task<ActionResult<UserInfoModel>> GetPersonalData(CancellationToken ct)
+        public async Task<ActionResult<UserInfoModel>> GetPersonalData(CancellationToken cancellation)
         {
             try
             {
                 string id = GetUserIdOfCurrentRequest();
                 if (!String.IsNullOrEmpty(id))
                 {
-                    User user = await _repo.FindUserByIdAsync(id);
-                    if (user is not null)
+                    PersonalDataQuery query = new(id);
+                    UserInfoModel UserInfo = await _mediator.Send(query, cancellation);
+                    if(UserInfo is null)
                     {
-                        ct.ThrowIfCancellationRequested();
-
-                        UserInfoModel userInfo = _converter.ConvertUserToInfoModel(user);
-                        return Ok(userInfo);
+                        return NotFound();
                     }
-                    return NotFound();
+                    else
+                    {
+                        return Ok(UserInfo);
+                    }
                 }
                 else
                 {
