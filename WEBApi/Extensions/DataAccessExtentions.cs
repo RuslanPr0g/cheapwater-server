@@ -12,5 +12,12 @@ namespace WEBApi.Extensions
             services.AddSingleton<IUserReadRepo, UserReadRepo>();
             return services;
         }
+
+        public static IApplicationBuilder UseWebSocketsServer(this IApplicationBuilder app)
+        {
+            app.UseWebSockets();
+            app.UseMiddleware<WebSocketsMiddleware>();
+            return app;
+        }
     }
 }

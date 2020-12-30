@@ -54,12 +54,5 @@ namespace WEBApi.Extensions
             services.AddSingleton<RegistrationValidator>();
             return services;
         }
-
-        public static IApplicationBuilder UseWebSocketsServer(this IApplicationBuilder app)
-        {
-            app.UseWebSockets();
-            app.UseMiddleware<WebSocketsMiddleware>();
-            return app;
-        }
     }
 }
