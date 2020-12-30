@@ -6,6 +6,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
 using WEBApi.Authentication;
+using WEBApi.Validators;
 
 
 namespace WEBApi.Extensions
@@ -44,6 +45,12 @@ namespace WEBApi.Extensions
 
             services.AddSingleton<IJWTokenManager>(x => x.GetService<IJwtokenManagerFactory>().CreateTokenManager());
 
+            return services;
+        }
+
+        public static IServiceCollection AddValidators(this IServiceCollection services)
+        {
+            services.AddSingleton<RegistrationValidator>();
             return services;
         }
     }
