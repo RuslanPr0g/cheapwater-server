@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace DataAccessLibrary.DB
 {
-    public interface IUserReadRepository
+    public interface IUserReadRepo
     {
         Task<User> FindUserByIdAsync(string id, CancellationToken cancellation);
         Task<User> FindUserByEmailAsync(string email, CancellationToken cancellation);
