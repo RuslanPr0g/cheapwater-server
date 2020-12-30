@@ -7,6 +7,8 @@ using Microsoft.IdentityModel.Tokens;
 using System.Text;
 using WEBApi.Authentication;
 using WEBApi.Validators;
+using Microsoft.AspNetCore.Builder;
+using WEBApi.Middleware;
 
 
 namespace WEBApi.Extensions
@@ -52,6 +54,13 @@ namespace WEBApi.Extensions
         {
             services.AddSingleton<RegistrationValidator>();
             return services;
+        }
+
+        public static IApplicationBuilder UseWebSocketsServer(this IApplicationBuilder app)
+        {
+            app.UseWebSockets();
+            app.UseMiddleware<WebSocketsMiddleware>();
+            return app;
         }
     }
 }
