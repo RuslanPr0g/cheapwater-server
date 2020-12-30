@@ -12,7 +12,7 @@ namespace WEBApi.Validators
 {
     public class RegistrationValidator : AbstractValidator<UserRegistrationModel>
     {
-        private readonly IUserReadRepository _repo;
+        private readonly IUserReadRepo _repo;
         public override Task<ValidationResult> ValidateAsync(ValidationContext<UserRegistrationModel> context, CancellationToken cancellation = default)
         {
             RuleFor(user => user.Email)
@@ -30,7 +30,7 @@ namespace WEBApi.Validators
                 .MaximumLength(64).WithMessage("Password is too long");
             return base.ValidateAsync(context, cancellation);
         }
-        public RegistrationValidator(IUserReadRepository repo)
+        public RegistrationValidator(IUserReadRepo repo)
         {
             this._repo = repo;
         }

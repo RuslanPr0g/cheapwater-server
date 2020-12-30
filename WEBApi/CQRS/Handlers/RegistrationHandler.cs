@@ -16,10 +16,10 @@ namespace WEBApi.CQRS.Handlers
     public class RegistrationHandler : IRequestHandler<RegistrationCommand, string>
     {
         private readonly IModelConverter _converter;
-        private readonly IUserAddRepository _repo;
+        private readonly IUserAddRepo _repo;
         private readonly IJWTokenManager _manager;
 
-        public RegistrationHandler(IModelConverter converter, IUserAddRepository repo, IJWTokenManager manager)
+        public RegistrationHandler(IModelConverter converter, IUserAddRepo repo, IJWTokenManager manager)
         {
             this._converter = converter;
             this._repo = repo;
