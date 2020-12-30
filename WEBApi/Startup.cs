@@ -45,7 +45,7 @@ namespace WEBApi
                     options => options.MigrationsAssembly(nameof(WEBApi)))
             );
 
-            services.AddScoped<IUserAddRepository, UserAddRepository>();
+            services.AddScoped<IUserAddRepo, UserAddRepo>();
 
             services.AddEncryption();
 

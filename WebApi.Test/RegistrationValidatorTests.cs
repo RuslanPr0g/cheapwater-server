@@ -16,7 +16,7 @@ namespace WebApi.Tests
     public class RegistrationValidatorTests
     {
         private readonly RegistrationValidator _systemUnderTesting;
-        private readonly Mock<IUserReadRepository> _repoMock = new Mock<IUserReadRepository>();
+        private readonly Mock<IUserReadRepo> _repoMock = new Mock<IUserReadRepo>();
         public RegistrationValidatorTests()
         {
             _systemUnderTesting = new(_repoMock.Object);

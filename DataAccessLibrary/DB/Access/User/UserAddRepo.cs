@@ -9,12 +9,12 @@ using System.Threading.Tasks;
 
 namespace DataAccessLibrary.DB
 {
-    public class UserAddRepository:IUserAddRepository
+    public class UserAddRepo:IUserAddRepo
     {
         private readonly AuthContext _context;
         private readonly IEncrypter _encrypter;
 
-        public UserAddRepository(AuthContext context, IEncrypter encrypter)
+        public UserAddRepo(AuthContext context, IEncrypter encrypter)
         {
             this._context = context;
             this._encrypter = encrypter;

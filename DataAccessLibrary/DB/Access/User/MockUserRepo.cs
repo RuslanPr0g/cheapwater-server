@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace DataAccessLibrary.DB
 {
-    public class MockUserRepo : IUserReadRepository
+    public class MockUserRepo : IUserReadRepo
     {
         public Task<bool> CheckIsEmailPresent(string email, CancellationToken token)
         {

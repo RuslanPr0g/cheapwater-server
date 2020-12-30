@@ -13,10 +13,10 @@ namespace WEBApi.CQRS.Handlers
 {
     public class PersonalDataHandler : IRequestHandler<PersonalDataQuery, UserInfoModel>
     {
-        private readonly IUserReadRepository _repo;
+        private readonly IUserReadRepo _repo;
         private readonly IModelConverter _converter;
 
-        public PersonalDataHandler(IUserReadRepository repo, IModelConverter converter)
+        public PersonalDataHandler(IUserReadRepo repo, IModelConverter converter)
         {
             this._repo = repo;
             this._converter = converter;

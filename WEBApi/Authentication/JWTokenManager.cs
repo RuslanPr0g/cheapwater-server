@@ -16,10 +16,10 @@ namespace WEBApi.Authentication
     public class JWTokenManager : IJWTokenManager
     {
         private readonly string key;
-        private readonly IUserReadRepository _repo;
+        private readonly IUserReadRepo _repo;
         private readonly IEncrypter _encrypter;
 
-        public JWTokenManager(string key, IUserReadRepository repo, IEncrypter encrypter)
+        public JWTokenManager(string key, IUserReadRepo repo, IEncrypter encrypter)
         {
             this.key = key;
             this._repo = repo;

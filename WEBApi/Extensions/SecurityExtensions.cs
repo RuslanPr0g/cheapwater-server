@@ -1,19 +1,26 @@
-﻿using DataAccessLibrary.DB;
+﻿using DataAccessLibrary.Encryption;
+using Microsoft.Extensions.DependencyInjection;
+using System.Security.Cryptography;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.DependencyInjection;
 using Microsoft.IdentityModel.Tokens;
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
 using WEBApi.Authentication;
+using WEBApi.Validators;
+using Microsoft.AspNetCore.Builder;
+using WEBApi.Middleware;
 
 namespace WEBApi.Extensions
 {
-    public static class JWTokenExtensions
+    public static class SecurityExtensions
     {
+        public static IServiceCollection AddEncryption(this IServiceCollection services)
+        {
+            services.AddSingleton<HashAlgorithm>(MD5.Create());
+            services.AddSingleton<IEncrypter, Encrypter>();
+            return services;
+        }
+
         public static IServiceCollection AddJWTokens(this IServiceCollection services, IConfiguration conf)
         {
             services.AddSingleton<IJwtokenManagerFactory, JwtokenManagerFactory>();
@@ -37,9 +44,22 @@ namespace WEBApi.Extensions
                 };
             });
 
-            services.AddSingleton<IJWTokenManager>(x =>x.GetService<IJwtokenManagerFactory>().CreateTokenManager());
+            services.AddSingleton<IJWTokenManager>(x => x.GetService<IJwtokenManagerFactory>().CreateTokenManager());
 
             return services;
+        }
+
+        public static IServiceCollection AddValidators(this IServiceCollection services)
+        {
+            services.AddSingleton<RegistrationValidator>();
+            return services;
+        }
+
+        public static IApplicationBuilder UseWebSocketsServer(this IApplicationBuilder app)
+        {
+            app.UseWebSockets();
+            app.UseMiddleware<WebSocketsMiddleware>();
+            return app;
         }
     }
 }

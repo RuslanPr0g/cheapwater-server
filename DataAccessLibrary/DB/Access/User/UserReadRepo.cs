@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace DataAccessLibrary.DB
 {
-    public class UserReadRepo : IUserReadRepository
+    public class UserReadRepo : IUserReadRepo
     {
         private readonly ISQLDataAccess _db;
 
