@@ -12,7 +12,7 @@ namespace WEBApi.Extensions
         public static IServiceCollection AddValidators(this IServiceCollection services)
         {
             services.AddSingleton<RegistrationValidator>();
-            return services;    
+            return services;
         }
     }
 }
