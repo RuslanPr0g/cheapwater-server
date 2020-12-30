@@ -10,7 +10,6 @@ using WEBApi.Validators;
 using Microsoft.AspNetCore.Builder;
 using WEBApi.Middleware;
 
-
 namespace WEBApi.Extensions
 {
     public static class SecurityExtensions
