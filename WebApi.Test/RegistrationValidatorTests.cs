@@ -34,11 +34,12 @@ namespace WebApi.Tests
                 Nickname = nickname,
                 Password = password
             };
-            //act
             //user is assumed not to present in the db
             _repoMock.Setup(x => x.CheckIsEmailPresent(email, CancellationToken.None)).ReturnsAsync(false);
 
+            //act
             ValidationResult result =  await _systemUnderTesting.ValidateAsync(model, CancellationToken.None);
+
             //assert
             Assert.False(result.IsValid);
         }
@@ -54,11 +55,12 @@ namespace WebApi.Tests
                 Nickname = nickname,
                 Password = password
             };
-            //act
             //user is assumed to be present in the db
             _repoMock.Setup(x => x.CheckIsEmailPresent(email, CancellationToken.None)).ReturnsAsync(true);
 
+            //act
             ValidationResult result = await _systemUnderTesting.ValidateAsync(model, CancellationToken.None);
+
             //assert
             Assert.False(result.IsValid);
         }
@@ -74,11 +76,12 @@ namespace WebApi.Tests
                 Nickname = nickname,
                 Password = password
             };
-            //act
             //user is assumed not to present in the db
             _repoMock.Setup(x => x.CheckIsEmailPresent(email, CancellationToken.None)).ReturnsAsync(false);
 
+            //act
             ValidationResult result = await _systemUnderTesting.ValidateAsync(model, CancellationToken.None);
+
             //assert
             Assert.True(result.IsValid);
         }
