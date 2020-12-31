@@ -1,6 +1,8 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using DataAccessLibrary;
 using DataAccessLibrary.DB;
+using Microsoft.AspNetCore.Builder;
+using WEBApi.Middleware;
 
 namespace WEBApi.Extensions
 {
