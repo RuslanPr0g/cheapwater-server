@@ -23,7 +23,6 @@ namespace WEBApi.CQRS.Handlers
             UserLoginModel user = request.Dto;
             var token = await _manager.Authorize(user.Email, user.Password, cancellationToken);
             return token;
-
         }
     }
 }

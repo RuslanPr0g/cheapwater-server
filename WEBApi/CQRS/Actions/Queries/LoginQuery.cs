@@ -14,6 +14,5 @@ namespace WEBApi.CQRS.Actions.Queries
         {
             Dto = dto;
         }
-
     }
 }
