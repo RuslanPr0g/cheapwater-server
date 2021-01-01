@@ -27,8 +27,6 @@ namespace WEBApi.CQRS.Handlers
         }
         public async Task<string> Handle(RegistrationCommand request, CancellationToken cancellation)
         {
-
-
             User user = _converter.ConvertUserFromDTO(request.DTO);
 
             await _repo.InsertUserIntoTheDb(user);
@@ -36,7 +34,6 @@ namespace WEBApi.CQRS.Handlers
             var token = await _manager.Authorize(user.Email, request.DTO.Password, cancellation);
 
             return token;
-
         }
     }
 }

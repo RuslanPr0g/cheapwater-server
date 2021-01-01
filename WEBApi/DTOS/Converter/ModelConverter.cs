@@ -18,8 +18,8 @@ namespace WEBApi.DTOs
                     Email = model.Email,
                     Password = model.Password,
                     Username = model.Nickname,
-                    Balance =0,
-                    Id = Guid.NewGuid().ToString()
+                    Balance = 0,
+                    Id = Guid.NewGuid()
                 };
                 return output;
             }
