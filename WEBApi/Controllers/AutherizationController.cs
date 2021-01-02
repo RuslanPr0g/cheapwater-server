@@ -22,7 +22,7 @@ namespace WEBApi.Controllers
     {
         private readonly IMediator _mediator;
 
-        public AutherizationController(RegistrationValidator validator, IMediator mediator)
+        public AutherizationController(IMediator mediator)
         {
             this._mediator = mediator;
         }
