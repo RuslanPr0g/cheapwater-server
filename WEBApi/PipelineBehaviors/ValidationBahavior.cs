@@ -23,7 +23,7 @@ namespace WEBApi.PipelineBehaviors
         {
             var context = new ValidationContext<TRequest>(request);
             var failures = _validators
-                .Select(async(x)=>await x.ValidateAsync(context))
+                .Select(async(x)=>await x.ValidateAsync(context, cancellationToken))
                 .SelectMany(x => x.Result.Errors)
                 .Where(x => x is not null)
                 .ToList();
