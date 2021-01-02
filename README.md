@@ -1,3 +1,3 @@
 # cheapwater-server
 
-## Server for cheapwater project. Read more about cheapwater **here**.
+## Server for cheapwater project. Client part **https://github.com/catdevdev/cheapwater-client-users**.
