@@ -10,12 +10,13 @@ using WEBApi.DTOs;
 using WEBApi.Validators;
 using Xunit;
 using FluentValidation.Results;
+using WEBApi.CQRS.Actions.Commands;
 
 namespace WebApi.Tests
 {
     public class RegistrationValidatorTests
     {
-        private readonly RegistrationValidator _systemUnderTesting;
+        private readonly RegistrationCommandValidator _systemUnderTesting;
         private readonly Mock<IUserReadRepo> _repoMock = new Mock<IUserReadRepo>();
         public RegistrationValidatorTests()
         {
@@ -36,9 +37,9 @@ namespace WebApi.Tests
             };
             //user is assumed not to present in the db
             _repoMock.Setup(x => x.CheckIsEmailPresent(email, CancellationToken.None)).ReturnsAsync(false);
-
+            var command = new RegistrationCommand(model);
             //act
-            ValidationResult result =  await _systemUnderTesting.ValidateAsync(model, CancellationToken.None);
+            ValidationResult result =  await _systemUnderTesting.ValidateAsync(command, CancellationToken.None);
 
             //assert
             Assert.False(result.IsValid);
@@ -55,11 +56,12 @@ namespace WebApi.Tests
                 Nickname = nickname,
                 Password = password
             };
+            var command = new RegistrationCommand(model);
             //user is assumed to be present in the db
             _repoMock.Setup(x => x.CheckIsEmailPresent(email, CancellationToken.None)).ReturnsAsync(true);
 
             //act
-            ValidationResult result = await _systemUnderTesting.ValidateAsync(model, CancellationToken.None);
+            ValidationResult result = await _systemUnderTesting.ValidateAsync(command, CancellationToken.None);
 
             //assert
             Assert.False(result.IsValid);
@@ -76,11 +78,12 @@ namespace WebApi.Tests
                 Nickname = nickname,
                 Password = password
             };
+            var command = new RegistrationCommand(model);
             //user is assumed not to present in the db
             _repoMock.Setup(x => x.CheckIsEmailPresent(email, CancellationToken.None)).ReturnsAsync(false);
 
             //act
-            ValidationResult result = await _systemUnderTesting.ValidateAsync(model, CancellationToken.None);
+            ValidationResult result = await _systemUnderTesting.ValidateAsync(command, CancellationToken.None);
 
             //assert
             Assert.True(result.IsValid);
