@@ -12,7 +12,6 @@ using System.Threading;
 using MediatR;
 using WEBApi.CQRS.Actions.Commands;
 using WEBApi.CQRS.Actions.Queries;
-using FluentValidation;
 
 namespace WEBApi.Controllers
 {
@@ -34,6 +33,20 @@ namespace WEBApi.Controllers
         {
             try
             {
+                var results = await _validator.ValidateAsync(userDto, cancellation);
+
+                if (!results.IsValid)
+                {
+                    List<string> ErrorMessages = new List<string>();
+                    foreach (var Error in results.Errors)
+                    {
+                        ErrorMessages.Add(Error.ErrorMessage);
+                    }
+                    return BadRequest(ErrorMessages);
+                }
+
+                cancellation.ThrowIfCancellationRequested();
+
                 var command = new RegistrationCommand(userDto);
 
                 string token = await _mediator.Send(command, cancellationToken: cancellation);
@@ -49,14 +62,9 @@ namespace WEBApi.Controllers
             {
                 return BadRequest("Canceled");
             }
-            catch(ValidationException exc)
+            catch (Exception e)
             {
-                return BadRequest(exc.Message);
-            }
-            catch(Exception exc)
-            {
-                //log
-                return BadRequest();
+                return BadRequest("Something went wrong: " + e.Message);
             }
         }
 
