@@ -6,6 +6,7 @@ using WEBApi.Middleware;
 using Dapper;
 using DataAccessLibrary.DB.Access.DataAccess;
 using System;
+using WEBApi.DTOs;
 
 namespace WEBApi.Extensions
 {
@@ -13,8 +14,11 @@ namespace WEBApi.Extensions
     {
         public static IServiceCollection AddDapperDatabase(this IServiceCollection services)
         {
-            services.AddSingleton<ISQLDataAccess, SQLDataAccess>();
-            services.AddSingleton<IUserReadRepo, UserReadRepo>();
+            services.AddScoped<ISQLDataAccess, SQLDataAccess>();
+            services.AddScoped<IUserReadRepo, UserReadRepo>();
+            services.AddScoped<IUserAddRepo, UserAddRepo>();
+
+            services.AddSingleton<IModelConverter, ModelConverter>();
 
             SqlMapper.AddTypeHandler(new PostgreGuidTypeHandler());
             SqlMapper.RemoveTypeMap(typeof(Guid));
