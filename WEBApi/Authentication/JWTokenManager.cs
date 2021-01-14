@@ -1,6 +1,7 @@
 ﻿using DataAccessLibrary.DB;
 using DataAccessLibrary.DB.Entities;
 using DataAccessLibrary.Encryption;
+using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
 using System;
 using System.Collections.Generic;
@@ -19,9 +20,9 @@ namespace WEBApi.Authentication
         private readonly IUserReadRepo _repo;
         private readonly IEncrypter _encrypter;
 
-        public JWTokenManager(string key, IUserReadRepo repo, IEncrypter encrypter)
+        public JWTokenManager(IConfiguration config, IUserReadRepo repo, IEncrypter encrypter)
         {
-            this.key = key;
+            this.key = config.GetValue<string>("Key");
             this._repo = repo;
             this._encrypter = encrypter;
         }

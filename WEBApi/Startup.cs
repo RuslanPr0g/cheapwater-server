@@ -34,13 +34,9 @@ namespace WEBApi
                     options => options.MigrationsAssembly(nameof(WEBApi)))
             );
             
-            services.AddScoped<IUserAddRepo, UserAddRepo>();
-
             services.AddEncryption();
 
-            services.AddSingleton<IModelConverter, ModelConverter>();
-
-            services.AddDapperDatabase();
+            services.AddRepositories();
 
             services.AddValidators();
            
