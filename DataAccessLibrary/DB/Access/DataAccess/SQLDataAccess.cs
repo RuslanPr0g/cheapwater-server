@@ -1,4 +1,6 @@
 ﻿using Dapper;
+using DataAccessLibrary.DB;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Npgsql;
 using System;
@@ -14,20 +16,16 @@ namespace DataAccessLibrary
 {
     public class SQLDataAccess : ISQLDataAccess
     {
-        private readonly IConfiguration _configuration;
+        private readonly AuthContext _context;
 
-        public string ConnectionStringName { get; } = "Standard";
-
-        public SQLDataAccess(IConfiguration configuration)
+        public SQLDataAccess(AuthContext context)
         {
-            this._configuration = configuration;
+            this._context = context;
         }
 
         public async Task<List<T>> LoadDataNoParam<T>(string sql, CancellationToken token)
         {
-            string connectionString = _configuration.GetConnectionString(ConnectionStringName);
-
-            using (IDbConnection connection = new NpgsqlConnection(connectionString))
+            using (IDbConnection connection = _context.Database.GetDbConnection())
             {
 
                 CommandDefinition command = new(sql, cancellationToken: token);
@@ -39,9 +37,7 @@ namespace DataAccessLibrary
         }
         public async Task<List<T>> LoadData<T, U>(string sql, U parameters, CancellationToken token)
         {
-            string connectionString = _configuration.GetConnectionString(ConnectionStringName);
-
-            using (IDbConnection connection = new NpgsqlConnection(connectionString))
+            using (IDbConnection connection = _context.Database.GetDbConnection())
             {
                 CommandDefinition command = new(sql, parameters:parameters, cancellationToken:token);
 
@@ -53,9 +49,7 @@ namespace DataAccessLibrary
 
         public async Task SaveData<T>(string sql, T parameters, CancellationToken token)
         {
-            string connectionString = _configuration.GetConnectionString(ConnectionStringName);
-
-            using (IDbConnection connection = new NpgsqlConnection(connectionString))
+            using (IDbConnection connection = _context.Database.GetDbConnection())
             {
                 CommandDefinition command = new(sql, parameters: parameters, cancellationToken: token);
 
