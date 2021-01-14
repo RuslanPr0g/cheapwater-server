@@ -26,8 +26,6 @@ namespace WEBApi.Extensions
 
         public static IServiceCollection AddJWTokens(this IServiceCollection services, IConfiguration conf)
         {
-            services.AddSingleton<IJwtokenManagerFactory, JwtokenManagerFactory>();
-
             string key = conf.GetValue<string>("Key");
             services.AddAuthentication(x =>
             {
