@@ -9,6 +9,9 @@ using WEBApi.Authentication;
 using WEBApi.Validators;
 using Microsoft.AspNetCore.Builder;
 using WEBApi.Middleware;
+using FluentValidation;
+using MediatR;
+using WEBApi.PipelineBehaviors;
 
 namespace WEBApi.Extensions
 {
@@ -51,7 +54,8 @@ namespace WEBApi.Extensions
 
         public static IServiceCollection AddValidators(this IServiceCollection services)
         {
-            services.AddSingleton<RegistrationValidator>();
+            services.AddValidatorsFromAssembly(typeof(Startup).Assembly);
+            services.AddTransient(typeof(IPipelineBehavior<,>), typeof(ValidationBahavior<,>));
             return services;
         }
     }

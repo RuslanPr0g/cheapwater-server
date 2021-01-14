@@ -62,7 +62,7 @@ namespace WebApi.Tests
             _repoMock.Setup(x => x.FindUserByEmailAsync(email, CancellationToken.None)).ReturnsAsync(new User
             {
                 Password = GetPassword(),
-                Id = Guid.NewGuid().ToString()
+                Id = Guid.NewGuid()
             });
             _encrypterMock.Setup(x => x.Encrypt(password)).ReturnsAsync(password);
             //Act
