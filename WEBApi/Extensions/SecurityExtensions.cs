@@ -45,7 +45,7 @@ namespace WEBApi.Extensions
                 };
             });
 
-            services.AddSingleton<IJWTokenManager, JWTokenManager>();
+            services.AddScoped<IJWTokenManager, JWTokenManager>();
 
             return services;
         }
