@@ -21,8 +21,9 @@ namespace WEBApi
         }
         public IJWTokenManager CreateTokenManager()
         {
-            string key = _provider.GetService<IConfiguration>().GetValue<string>("Key");
-            return new JWTokenManager(key, _provider.GetService<IUserReadRepo>(),_provider.GetService<IEncrypter>());
+            /*string key = _provider.GetService<IConfiguration>().GetValue<string>("Key");
+            return new JWTokenManager(key, _provider.GetService<IUserReadRepo>(),_provider.GetService<IEncrypter>());*/
+            throw new NotImplementedException();
         }
     }
 }

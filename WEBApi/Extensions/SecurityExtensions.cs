@@ -47,7 +47,7 @@ namespace WEBApi.Extensions
                 };
             });
 
-            services.AddSingleton<IJWTokenManager>(x => x.GetService<IJwtokenManagerFactory>().CreateTokenManager());
+            services.AddSingleton<IJWTokenManager, JWTokenManager>();
 
             return services;
         }
