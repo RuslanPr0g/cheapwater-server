@@ -36,7 +36,7 @@ namespace WEBApi
             
             services.AddEncryption();
 
-            services.AddDapperDatabase();
+            services.AddRepositories();
 
             services.AddValidators();
            

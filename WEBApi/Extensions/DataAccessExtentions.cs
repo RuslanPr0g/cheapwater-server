@@ -12,7 +12,7 @@ namespace WEBApi.Extensions
 {
     public static class DataAccessExtentions
     {
-        public static IServiceCollection AddDapperDatabase(this IServiceCollection services)
+        public static IServiceCollection AddRepositories(this IServiceCollection services)
         {
             services.AddScoped<ISQLDataAccess, SQLDataAccess>();
             services.AddScoped<IUserReadRepo, UserReadRepo>();
