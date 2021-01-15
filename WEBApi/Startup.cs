@@ -26,7 +26,7 @@ namespace WEBApi
             services.AddControllers();
             services.AddSwaggerGen(c =>
             {
-                c.SwaggerDoc("v1", new OpenApiInfo { Title = "WEBApi", Version = "v1" });
+                c.SwaggerDoc("v1", new OpenApiInfo { Title = "CheapWaterAPI", Version = "v1" });
             });
             
             services.AddDbContext<AuthContext>(x =>

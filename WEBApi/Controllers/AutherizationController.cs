@@ -90,13 +90,5 @@ namespace WEBApi.Controllers
                 return BadRequest("Something went wrong");
             }
         }
-        //Authorization check
-        /*
-        [Authorize]
-        [HttpGet]
-        public ActionResult<string> GetUSCapital()
-        {
-            return Ok("Washington DC");
-        }*/
     }
 }
