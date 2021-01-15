@@ -1,6 +1,7 @@
 ﻿using DataAccessLibrary.DB;
 using DataAccessLibrary.DB.Entities;
 using DataAccessLibrary.Encryption;
+using Microsoft.Extensions.Configuration;
 using Moq;
 using System;
 using System.Collections.Generic;
@@ -23,7 +24,16 @@ namespace WebApi.Tests
 
         public JWTokenManagerTests()
         {
-            _systemUnderTesting = new JWTokenManager(Key, _repoMock.Object, _encrypterMock.Object);
+            var config = new Dictionary<string, string>
+            {
+                {"Key", Key}
+            };
+
+            var configuration = new ConfigurationBuilder()
+                .AddInMemoryCollection(config)
+                .Build();
+
+            _systemUnderTesting = new JWTokenManager(configuration, _repoMock.Object, _encrypterMock.Object);
         }
         [Fact]
         public async Task Authorize_ShouldFail_NoUser()
