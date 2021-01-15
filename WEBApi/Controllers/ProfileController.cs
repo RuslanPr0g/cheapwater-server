@@ -21,14 +21,10 @@ namespace WEBApi.Controllers
     [Route("api/profile")]
     public class ProfileController : ControllerBase
     {
-        private readonly IUserReadRepo _repo;
-        private readonly IModelConverter _converter;
         private readonly IMediator _mediator;
 
-        public ProfileController(IUserReadRepo repo, IModelConverter converter, IMediator mediator)
+        public ProfileController(IMediator mediator)
         {
-            _repo = repo;
-            this._converter = converter;
             this._mediator = mediator;
         }
 
