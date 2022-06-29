@@ -46,7 +46,7 @@ namespace WebApi.Tests
         }
         [Theory]
         [InlineData("Email@gmail.com", "username", "password123")]
-        [InlineData("theruslan.prog@gmail.com", "RuslanPr0g", "Tasman2020")]
+        [InlineData("theruslan.prog@gmail.com", "RuslanPr0g", "Popa2021")]
         public async Task ValidateAsync_ShouldFail_NotAvailableEmail(string email, string nickname, string password)
         {
             //arrange
@@ -68,7 +68,7 @@ namespace WebApi.Tests
         }
         [Theory]
         [InlineData("Email@gmail.com", "username", "password123")]
-        [InlineData("theruslan.prog@gmail.com", "RuslanPr0g", "Tasman2020")]
+        [InlineData("theruslan.prog@gmail.com", "RuslanPr0g", "Popa2021")]
         public async Task ValidateAsync_ShouldWork_ValidData(string email, string nickname, string password)
         {
             //arrange
